@@ -24,7 +24,23 @@ hs_err_pid*
 replay_pid*
 
 
+# Claude settings
 .claude/
 .claude/settings.local.json
+
+# Vue config files
+.env
+.env.local
+.env.*.local
+*.local
+
+# Root level images (keep assets/)
+/*.png
+/*.jpg
+/*.jpeg
+/*.gif
+/*.svg
+/*.ico
+/*.webp
 
 node_modules/
