@@ -1,0 +1,274 @@
+/* Neo-Brutalist Core Styles */
+
+/* Base Card Style */
+.neo-card {
+  background: var(--color-bg-secondary);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-black);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.neo-card:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 12px 12px 0px 0px #000000;
+}
+
+.neo-card:active {
+  transform: translate(0, 0);
+  box-shadow: none;
+}
+
+/* Card Variants */
+.neo-card--primary {
+  background: var(--color-primary);
+  color: var(--color-bg-primary);
+}
+
+.neo-card--secondary {
+  background: var(--color-secondary);
+  color: var(--color-text-primary);
+}
+
+.neo-card--dark {
+  background: var(--color-surface-lowest);
+}
+
+.neo-card--white-shadow {
+  box-shadow: var(--shadow-white);
+}
+
+.neo-card--gold-shadow {
+  box-shadow: var(--shadow-primary);
+}
+
+.neo-card--teal-shadow {
+  box-shadow: var(--shadow-secondary);
+}
+
+/* Base Button Style */
+.neo-btn {
+  font-family: var(--font-headline);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.neo-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 4px 4px 0 var(--color-border);
+}
+
+.neo-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+.neo-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Button Variants */
+.neo-btn--primary {
+  background: var(--color-primary);
+  color: var(--color-bg-primary);
+  box-shadow: var(--shadow-black);
+}
+
+.neo-btn--primary:hover {
+  box-shadow: 10px 10px 0 #000000;
+}
+
+.neo-btn--secondary {
+  background: transparent;
+  border: var(--border-width) solid var(--color-border);
+}
+
+.neo-btn--tertiary {
+  background: transparent;
+  border: none;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+/* Base Tag Style */
+.neo-tag {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-headline);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: var(--border-width-sm) solid var(--color-border);
+  border-radius: var(--border-radius);
+  transition: transform var(--transition-fast);
+}
+
+.neo-tag--yellow {
+  background: var(--color-primary);
+  color: var(--color-bg-primary);
+}
+
+.neo-tag--cyan {
+  background: var(--color-secondary);
+  color: var(--color-text-primary);
+}
+
+.neo-tag--white {
+  background: var(--color-card-white);
+  color: var(--color-bg-primary);
+  border-color: var(--color-bg-primary);
+}
+
+.neo-tag--gray {
+  background: var(--color-surface-highest);
+  color: var(--color-text-primary);
+}
+
+.neo-tag--rotate-left {
+  transform: rotate(-3deg);
+}
+
+.neo-tag--rotate-right {
+  transform: rotate(3deg);
+}
+
+.neo-tag:hover {
+  transform: rotate(0deg);
+}
+
+/* FAB Button */
+.neo-fab {
+  position: fixed;
+  bottom: calc(80px + var(--spacing-md));
+  right: var(--spacing-md);
+  width: 56px;
+  height: 56px;
+  border-radius: var(--border-radius);
+  border: var(--border-width) solid var(--color-border);
+  background: var(--color-primary);
+  color: var(--color-bg-primary);
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-hard);
+  transition: all var(--transition-fast);
+  z-index: var(--z-fixed);
+}
+
+.neo-fab:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 10px 10px 0 var(--color-surface-highest);
+}
+
+.neo-fab:active {
+  transform: translate(0, 2px);
+  box-shadow: none;
+}
+
+.neo-fab--teal {
+  background: var(--color-secondary);
+  color: var(--color-text-primary);
+}
+
+.neo-fab--white {
+  background: var(--color-card-white);
+  color: var(--color-bg-primary);
+}
+
+/* Input Style */
+.neo-input {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  background: var(--color-bg-tertiary);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-md);
+  color: var(--color-text);
+  width: 100%;
+  transition: all var(--transition-fast);
+}
+
+.neo-input::placeholder {
+  color: var(--color-text-muted);
+}
+
+.neo-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.neo-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Modal Style */
+.neo-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: var(--z-modal-backdrop);
+}
+
+.neo-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--color-bg-primary);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-white);
+  z-index: var(--z-modal);
+  max-width: 90vw;
+  max-height: 90vh;
+}
+
+/* Toast Style */
+.neo-toast {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--border-radius);
+  font-family: var(--font-headline);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  box-shadow: var(--shadow-small);
+  z-index: var(--z-toast);
+}
+
+.neo-toast--success {
+  background: var(--color-primary);
+  color: var(--color-bg-primary);
+}
+
+.neo-toast--error {
+  background: var(--color-error);
+  color: var(--color-text-primary);
+}
+
+.neo-toast--warning {
+  background: var(--color-secondary);
+  color: var(--color-text-primary);
+}

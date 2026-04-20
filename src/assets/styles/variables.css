@@ -1,0 +1,92 @@
+:root {
+  /* Colors - Neo-Brutalist */
+  --color-bg-primary: #131313;
+  --color-bg-secondary: #1a1a1a;
+  --color-bg-tertiary: #242424;
+  --color-surface: #131313;
+  --color-surface-lowest: #0e0e0e;
+  --color-surface-high: #2a2a2a;
+  --color-surface-highest: #353535;
+
+  --color-primary: #FFD700;
+  --color-secondary: #007F7F;
+  --color-accent-cyan: #00f1ff;
+
+  --color-text-primary: #FFFFFF;
+  --color-text: #e2e2e2;
+  --color-text-secondary: #A0A0A0;
+  --color-text-muted: #666666;
+
+  --color-border: #FFFFFF;
+  --color-border-primary: #FFD700;
+
+  --color-error: #93000a;
+  --color-success: #00a000;
+  --color-warning: #FFD700;
+
+  /* Card Colors */
+  --color-card-yellow: #FFD700;
+  --color-card-cyan: #007F7F;
+  --color-card-white: #FFFFFF;
+  --color-card-gray: #2a2a2a;
+  --color-card-dark: #0e0e0e;
+
+  /* Typography */
+  --font-headline: 'Space Grotesk', sans-serif;
+  --font-body: 'Manrope', sans-serif;
+
+  /* Font Sizes */
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
+
+  /* Font Weights */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-2xl: 48px;
+
+  /* Borders - Neo-Brutalist */
+  --border-width: 4px;
+  --border-width-sm: 2px;
+  --border-radius: 0px;
+
+  /* Shadows - Neo-Brutalist Offset */
+  --shadow-offset: 8px;
+  --shadow-black: 8px 8px 0px 0px #000000;
+  --shadow-white: 8px 8px 0px 0px #ffffff;
+  --shadow-primary: 8px 8px 0px 0px #FFD700;
+  --shadow-secondary: 8px 8px 0px 0px #007F7F;
+  --shadow-hard: 6px 6px 0px 0px #353535;
+  --shadow-small: 4px 4px 0px 0px #000000;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 350ms ease;
+
+  /* Z-Index */
+  --z-base: 0;
+  --z-dropdown: 10;
+  --z-sticky: 20;
+  --z-fixed: 30;
+  --z-modal-backdrop: 40;
+  --z-modal: 50;
+  --z-popover: 60;
+  --z-tooltip: 70;
+  --z-toast: 80;
+  --z-max: 100;
+}

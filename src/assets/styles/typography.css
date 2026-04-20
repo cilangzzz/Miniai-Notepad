@@ -1,0 +1,177 @@
+/* Typography Styles - Neo-Brutalist */
+
+/* Headline Styles */
+.font-headline {
+  font-family: var(--font-headline);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+/* Headings */
+h1, .h1 {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-black);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+h2, .h2 {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+h3, .h3 {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+}
+
+h4, .h4 {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.4;
+}
+
+/* Neo-Brutalist Brand Title */
+.neo-title {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-black);
+  font-style: italic;
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  color: var(--color-primary);
+  transform: skewX(-2deg);
+}
+
+.neo-title--large {
+  font-size: var(--font-size-3xl);
+}
+
+/* Section Headers */
+.neo-section-title {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--color-secondary);
+}
+
+/* Body Text */
+.neo-body {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.neo-body--large {
+  font-size: var(--font-size-lg);
+  line-height: 1.7;
+}
+
+.neo-body--small {
+  font-size: var(--font-size-sm);
+}
+
+/* Labels */
+.neo-label {
+  font-family: var(--font-headline);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.neo-label--medium {
+  font-size: var(--font-size-sm);
+}
+
+/* Caption */
+.neo-caption {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+/* Link Styles */
+.neo-link {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+  transition: color var(--transition-fast);
+}
+
+.neo-link:hover {
+  color: var(--color-accent-cyan);
+}
+
+/* Code/Monospace */
+.neo-code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: var(--font-size-sm);
+  background: var(--color-surface-high);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--border-radius);
+}
+
+/* Font Weight Utilities */
+.font-normal {
+  font-weight: var(--font-weight-normal);
+}
+
+.font-medium {
+  font-weight: var(--font-weight-medium);
+}
+
+.font-bold {
+  font-weight: var(--font-weight-bold);
+}
+
+.font-black {
+  font-weight: var(--font-weight-black);
+}
+
+/* Text Transform Utilities */
+.uppercase {
+  text-transform: uppercase;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+/* Letter Spacing */
+.tracking-tighter {
+  letter-spacing: -0.03em;
+}
+
+.tracking-tight {
+  letter-spacing: -0.01em;
+}
+
+.tracking-normal {
+  letter-spacing: 0;
+}
+
+.tracking-wide {
+  letter-spacing: 0.05em;
+}
+
+.tracking-widest {
+  letter-spacing: 0.15em;
+}
