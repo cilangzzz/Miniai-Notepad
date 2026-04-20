@@ -19,13 +19,33 @@ export function getDB(): MiniAIDB {
 
 /**
  * 初始化数据库
- * 确保数据库连接已建立
+ * 确保数据库连接已建立，处理可能的版本迁移错误
  */
 export async function initDB(): Promise<void> {
-  const db = getDB()
-  // Dexie 在创建实例时自动打开数据库
-  // 使用 db.open() 确保连接已建立
-  await db.open()
+  try {
+    const db = getDB()
+    await db.open()
+  } catch (err) {
+    // Version mismatch or schema change - delete old database and recreate
+    console.warn('Database schema mismatch, recreating database...')
+    if (dbInstance) {
+      dbInstance.close()
+      dbInstance = null
+    }
+    // Delete old database
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.deleteDatabase('MiniAIDB')
+      request.onsuccess = () => resolve()
+      request.onerror = () => reject(request.error)
+      request.onblocked = () => {
+        console.warn('Database deletion blocked, retrying...')
+        resolve() // Continue anyway
+      }
+    })
+    // Create new database
+    dbInstance = new MiniAIDB()
+    await dbInstance.open()
+  }
 }
 
 /**

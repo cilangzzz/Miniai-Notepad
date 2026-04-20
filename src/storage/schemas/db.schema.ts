@@ -17,34 +17,40 @@ export class MiniAIDB extends Dexie {
   constructor() {
     super('MiniAIDB')
 
-    // 版本1：初始 Schema
-    this.version(1).stores({
+    // 版本2：添加 is_deleted, sync_status 索引
+    this.version(2).stores({
       // 笔记表：主键id + 索引
-      // 索引：cloud_id, category_id, is_archived, is_pinned, created_at, updated_at
-      // 复合索引：[category_id+is_archived] 用于按分类筛选非归档笔记
-      notes: 'id, cloud_id, category_id, is_archived, is_pinned, created_at, updated_at, [category_id+is_archived]',
+      // 包含所有 SyncableEntity 字段和业务字段索引
+      notes: 'id, cloud_id, category_id, is_archived, is_pinned, is_deleted, sync_status, created_at, updated_at, [category_id+is_archived]',
 
       // 分类表：主键id + 索引
-      // 索引：cloud_id, slug, sort_order
-      categories: 'id, cloud_id, slug, sort_order',
+      categories: 'id, cloud_id, slug, sort_order, is_deleted, sync_status',
 
       // 标签表：主键id + 索引
-      // 索引：cloud_id, name, usage_count
-      tags: 'id, cloud_id, name, usage_count',
+      tags: 'id, cloud_id, name, usage_count, is_deleted, sync_status',
 
       // 收入表：主键id + 索引
-      // 索引：cloud_id, date, source
-      // 复合索引：[date+source] 用于月度来源统计
-      incomes: 'id, cloud_id, date, source, [date+source]',
+      incomes: 'id, cloud_id, date, source, is_deleted, sync_status, [date+source]',
 
       // 支出表：主键id + 索引
-      // 索引：cloud_id, date, category
-      // 复合索引：[date+category] 用于月度分类统计
-      expenses: 'id, cloud_id, date, category, [date+category]',
+      expenses: 'id, cloud_id, date, category, is_deleted, sync_status, [date+category]',
 
       // 新闻缓存表：主键id + 索引
-      // 索引：published_at, source, is_saved, is_read
-      newsCache: 'id, published_at, source, is_saved, is_read'
+      newsCache: 'id, published_at, source, is_saved, is_read, is_deleted'
+    }).upgrade(tx => {
+      // 为所有现有数据添加默认值
+      const tables = ['notes', 'categories', 'tags', 'incomes', 'expenses', 'newsCache']
+      return Promise.all(tables.map(tableName => {
+        const table = tx.table(tableName)
+        return table.toCollection().modify(item => {
+          if (item.is_deleted === undefined) {
+            item.is_deleted = false
+          }
+          if (item.sync_status === undefined) {
+            item.sync_status = 'local'
+          }
+        })
+      }))
     })
   }
 }

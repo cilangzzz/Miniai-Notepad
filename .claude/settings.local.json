@@ -8,7 +8,14 @@
       "Bash(git checkout *)",
       "Skill(update-config)",
       "Skill(update-config:*)",
-      "Bash(npm run *)"
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Read(//c/Users/sysadmin/.claude/plugins/cache/dev-browser-marketplace/dev-browser/66682fb0513a/skills/dev-browser/**)",
+      "Bash(./server.sh)",
+      "Bash(npx tsx *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ]
   }
 }

@@ -15,27 +15,56 @@ export class NoteRepository extends BaseRepository<Note, NoteCreateDTO, NoteUpda
     super(getDB().notes)
   }
 
+  /**
+   * 创建笔记，添加必要的默认字段
+   */
+  async create(data: NoteCreateDTO): Promise<Note> {
+    const now = Date.now()
+    const newNote: Note = {
+      id: crypto.randomUUID(),
+      title: data.title,
+      content: data.content,
+      category_id: data.category_id,
+      tags: data.tags || [],
+      card_type: data.card_type || 'text',
+      card_color: data.card_color || 'yellow',
+      font_weight: data.font_weight || 'normal',
+      is_archived: false,
+      is_pinned: data.is_pinned || false,
+      reminder_at: data.reminder_at,
+      reminder_status: data.reminder_at ? 'pending' : undefined,
+      attachments: undefined,
+      // SyncableEntity fields
+      cloud_id: undefined,
+      sync_status: 'local',
+      local_version: 1,
+      cloud_version: undefined,
+      created_at: now,
+      updated_at: now,
+      last_sync_at: undefined,
+      is_deleted: false,
+      deleted_at: undefined,
+    }
+
+    await this.table.add(newNote)
+    return newNote
+  }
+
   async findByCategory(categoryId: string): Promise<Note[]> {
     return this.table
-      .where('category_id')
-      .equals(categoryId)
-      .and(note => !note.is_archived && !note.is_deleted)
+      .filter(note => note.category_id === categoryId && !note.is_archived && !note.is_deleted)
       .toArray()
   }
 
   async findArchived(): Promise<Note[]> {
     return this.table
-      .where('is_archived')
-      .equals(true as unknown as boolean)
-      .and(note => !note.is_deleted)
+      .filter(note => note.is_archived && !note.is_deleted)
       .toArray()
   }
 
   async findPinned(): Promise<Note[]> {
     return this.table
-      .where('is_pinned')
-      .equals(true as unknown as boolean)
-      .and(note => !note.is_archived && !note.is_deleted)
+      .filter(note => note.is_pinned && !note.is_archived && !note.is_deleted)
       .toArray()
   }
 
@@ -124,30 +153,23 @@ export class NoteRepository extends BaseRepository<Note, NoteCreateDTO, NoteUpda
    * 查询笔记的筛选器实现
    */
   protected applyFilter(collection: Dexie.Collection<Note, string>, filter: FilterCondition): Dexie.Collection<Note, string> {
-    // 对于特定字段使用索引优化
-    if (filter.field === 'category_id' && filter.operator === 'eq') {
-      return this.table
-        .where('category_id')
-        .equals(filter.value as string)
-        .and(note => !note.is_deleted)
-    }
+    return collection.and(note => {
+      if (note.is_deleted) return false
 
-    if (filter.field === 'is_archived' && filter.operator === 'eq') {
-      return this.table
-        .where('is_archived')
-        .equals(filter.value as unknown as boolean)
-        .and(note => !note.is_deleted)
-    }
+      if (filter.field === 'category_id' && filter.operator === 'eq') {
+        return note.category_id === filter.value
+      }
 
-    if (filter.field === 'is_pinned' && filter.operator === 'eq') {
-      return this.table
-        .where('is_pinned')
-        .equals(filter.value as unknown as boolean)
-        .and(note => !note.is_deleted)
-    }
+      if (filter.field === 'is_archived' && filter.operator === 'eq') {
+        return note.is_archived === filter.value
+      }
 
-    // 默认使用基类的筛选逻辑
-    return super.applyFilter(collection, filter)
+      if (filter.field === 'is_pinned' && filter.operator === 'eq') {
+        return note.is_pinned === filter.value
+      }
+
+      return true
+    })
   }
 
   /**

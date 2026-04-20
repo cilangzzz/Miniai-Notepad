@@ -1,4 +1,15 @@
-/* Main Style Entry Point */
+/* Main Style Entry Point - MiniAI NotePad */
+
+/* Tailwind CSS Directives - REQUIRED */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Google Fonts (fallback if not loaded in HTML) */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+
+/* Material Symbols */
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 /* CSS Variables */
 @import './variables.css';
@@ -14,3 +25,50 @@
 
 /* Utility Classes */
 @import './utilities.css';
+
+/* Global Base Styles */
+body {
+  font-family: 'Manrope', sans-serif;
+  background-color: #131313;
+  color: #e2e2e2;
+  min-height: 100vh;
+}
+
+/* Headline Font */
+.font-headline {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Body Font */
+.font-body {
+  font-family: 'Manrope', sans-serif;
+}
+
+/* Selection */
+::selection {
+  background-color: #ffd700;
+  color: #131313;
+}
+
+/* Scrollbar - Gold Neo Style */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0e0e0e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #ffd700;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #007f7f;
+}
+
+/* Material Symbols Base */
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}

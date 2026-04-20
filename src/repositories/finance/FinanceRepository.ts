@@ -9,13 +9,13 @@ import type { Expense, ExpenseCreateDTO, ExpenseUpdateDTO } from '../../types/en
  * 提供收入和支出的统一管理和统计功能
  */
 export class FinanceRepository implements IFinanceRepository {
-  private incomeRepo: BaseRepository<Income, IncomeCreateDTO, IncomeUpdateDTO>
-  private expenseRepo: BaseRepository<Expense, ExpenseCreateDTO, ExpenseUpdateDTO>
+  private incomeRepo: IncomeRepository
+  private expenseRepo: ExpenseRepository
 
   constructor() {
     const db = getDB()
-    this.incomeRepo = new BaseRepository(db.incomes)
-    this.expenseRepo = new BaseRepository(db.expenses)
+    this.incomeRepo = new IncomeRepository(db.incomes)
+    this.expenseRepo = new ExpenseRepository(db.expenses)
   }
 
   // ========== 收入操作 ==========
@@ -43,18 +43,14 @@ export class FinanceRepository implements IFinanceRepository {
   async findIncomesByDateRange(startDate: string, endDate: string): Promise<Income[]> {
     const db = getDB()
     return db.incomes
-      .where('date')
-      .between(startDate, endDate, true, true)
-      .and(income => !income.is_deleted)
+      .filter(income => income.date >= startDate && income.date <= endDate && !income.is_deleted)
       .toArray()
   }
 
   async findIncomesBySource(source: string): Promise<Income[]> {
     const db = getDB()
     return db.incomes
-      .where('source')
-      .equals(source)
-      .and(income => !income.is_deleted)
+      .filter(income => income.source === source && !income.is_deleted)
       .toArray()
   }
 
@@ -83,18 +79,14 @@ export class FinanceRepository implements IFinanceRepository {
   async findExpensesByDateRange(startDate: string, endDate: string): Promise<Expense[]> {
     const db = getDB()
     return db.expenses
-      .where('date')
-      .between(startDate, endDate, true, true)
-      .and(expense => !expense.is_deleted)
+      .filter(expense => expense.date >= startDate && expense.date <= endDate && !expense.is_deleted)
       .toArray()
   }
 
   async findExpensesByCategory(category: string): Promise<Expense[]> {
     const db = getDB()
     return db.expenses
-      .where('category')
-      .equals(category)
-      .and(expense => !expense.is_deleted)
+      .filter(expense => expense.category === category && !expense.is_deleted)
       .toArray()
   }
 
@@ -261,5 +253,71 @@ export class FinanceRepository implements IFinanceRepository {
 
   async markExpenseSynced(id: string, cloudId: string): Promise<void> {
     await this.expenseRepo.markSynced(id, cloudId)
+  }
+}
+
+/**
+ * 收入Repository - 内部类
+ */
+class IncomeRepository extends BaseRepository<Income, IncomeCreateDTO, IncomeUpdateDTO> {
+  constructor(table: any) {
+    super(table)
+  }
+
+  async create(data: IncomeCreateDTO): Promise<Income> {
+    const now = Date.now()
+    const newIncome: Income = {
+      id: crypto.randomUUID(),
+      amount: data.amount,
+      source: data.source,
+      date: data.date,
+      note: data.note,
+      category: data.category,
+      // SyncableEntity fields
+      cloud_id: undefined,
+      sync_status: 'local',
+      local_version: 1,
+      cloud_version: undefined,
+      created_at: now,
+      updated_at: now,
+      last_sync_at: undefined,
+      is_deleted: false,
+      deleted_at: undefined,
+    }
+    await this.table.add(newIncome)
+    return newIncome
+  }
+}
+
+/**
+ * 支出Repository - 内部类
+ */
+class ExpenseRepository extends BaseRepository<Expense, ExpenseCreateDTO, ExpenseUpdateDTO> {
+  constructor(table: any) {
+    super(table)
+  }
+
+  async create(data: ExpenseCreateDTO): Promise<Expense> {
+    const now = Date.now()
+    const newExpense: Expense = {
+      id: crypto.randomUUID(),
+      amount: data.amount,
+      category: data.category,
+      date: data.date,
+      note: data.note,
+      budget_id: data.budget_id,
+      // SyncableEntity fields
+      cloud_id: undefined,
+      sync_status: 'local',
+      local_version: 1,
+      cloud_version: undefined,
+      created_at: now,
+      updated_at: now,
+      last_sync_at: undefined,
+      is_deleted: false,
+      deleted_at: undefined,
+    }
+    await this.table.add(newExpense)
+    return newExpense
   }
 }

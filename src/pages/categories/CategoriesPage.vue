@@ -15,7 +15,7 @@ import BaseButton from '@/components/base/BaseButton.vue'
 
 const router = useRouter()
 const { categories, loading, loadCategories, selectCategory, activeCategory } = useCategories()
-const { tags, loadTags, createTag, deleteTag } = useTags()
+const { tags, fetchTags, createTag, deleteTag } = useTags()
 
 // State
 const showCreateTagModal = ref(false)
@@ -72,7 +72,7 @@ const currentNav = 'categories'
 
 onMounted(async () => {
   await loadCategories()
-  await loadTags()
+  await fetchTags()
 })
 </script>
 

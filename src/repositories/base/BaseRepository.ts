@@ -202,9 +202,7 @@ export abstract class BaseRepository<T extends SyncableEntity, CreateDTO, Update
 
   async getPendingSync(): Promise<T[]> {
     return this.table
-      .where('sync_status')
-      .equals('pending')
-      .and(entity => !entity.is_deleted)
+      .filter(entity => entity.sync_status === 'pending' && !entity.is_deleted)
       .toArray()
   }
 
@@ -250,11 +248,11 @@ export abstract class BaseRepository<T extends SyncableEntity, CreateDTO, Update
 
   /**
    * 查找所有未删除的实体
+   * 使用 filter() 而不是 where() 以避免索引问题
    */
   async findAllActive(): Promise<T[]> {
     return this.table
-      .where('is_deleted')
-      .equals(false)
+      .filter(entity => entity.is_deleted === false)
       .toArray()
   }
 

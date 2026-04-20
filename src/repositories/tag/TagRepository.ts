@@ -14,13 +14,40 @@ export class TagRepository extends BaseRepository<Tag, TagCreateDTO, TagUpdateDT
     super(getDB().tags)
   }
 
+  /**
+   * 创建标签，添加必要的默认字段
+   */
+  async create(data: TagCreateDTO): Promise<Tag> {
+    const now = Date.now()
+    const newTag: Tag = {
+      id: crypto.randomUUID(),
+      name: data.name,
+      color: data.color || 'yellow',
+      rotation: data.rotation ?? Math.random() * 6 - 3,
+      usage_count: 0,
+      start_date: data.start_date,
+      end_date: data.end_date,
+      // SyncableEntity fields
+      cloud_id: undefined,
+      sync_status: 'local',
+      local_version: 1,
+      cloud_version: undefined,
+      created_at: now,
+      updated_at: now,
+      last_sync_at: undefined,
+      is_deleted: false,
+      deleted_at: undefined,
+    }
+
+    await this.table.add(newTag)
+    return newTag
+  }
+
   async findByName(name: string): Promise<Tag | null> {
-    const tag = await this.table
-      .where('name')
-      .equals(name)
-      .and(t => !t.is_deleted)
-      .first()
-    return tag ?? null
+    const tags = await this.table
+      .filter(tag => tag.name === name && !tag.is_deleted)
+      .toArray()
+    return tags[0] ?? null
   }
 
   async searchByName(keyword: string): Promise<Tag[]> {
