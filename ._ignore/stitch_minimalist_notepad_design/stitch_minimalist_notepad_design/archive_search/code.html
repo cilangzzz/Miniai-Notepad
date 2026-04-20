@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "background": "#131313",
+                        "surface-container-highest": "#353535",
+                        "inverse-surface": "#e2e2e2",
+                        "on-background": "#e2e2e2",
+                        "secondary-container": "#007f7f",
+                        "on-secondary-fixed": "#002020",
+                        "primary-fixed": "#ffe16d",
+                        "on-surface": "#e2e2e2",
+                        "surface-dim": "#131313",
+                        "on-surface-variant": "#d0c6ab",
+                        "surface-container-lowest": "#0e0e0e",
+                        "error-container": "#93000a",
+                        "tertiary-fixed": "#79f5ff",
+                        "on-primary-fixed": "#221b00",
+                        "on-tertiary-fixed-variant": "#004f54",
+                        "surface-container-high": "#2a2a2a",
+                        "primary": "#fff6df",
+                        "primary-fixed-dim": "#e9c400",
+                        "on-primary": "#3a3000",
+                        "surface": "#131313",
+                        "secondary-fixed": "#93f2f2",
+                        "primary-container": "#ffd700",
+                        "surface-variant": "#353535",
+                        "secondary-fixed-dim": "#76d6d5",
+                        "tertiary-fixed-dim": "#00dbe8",
+                        "inverse-primary": "#705d00",
+                        "tertiary": "#defcff",
+                        "surface-container": "#1f1f1f",
+                        "surface-bright": "#393939",
+                        "on-tertiary": "#00363a",
+                        "tertiary-container": "#00f1ff",
+                        "on-error-container": "#ffdad6",
+                        "on-error": "#690005",
+                        "secondary": "#76d6d5",
+                        "surface-tint": "#e9c400",
+                        "surface-container-low": "#1b1b1b",
+                        "on-tertiary-fixed": "#002022",
+                        "on-secondary-container": "#ddfffe",
+                        "on-secondary": "#003737",
+                        "on-tertiary-container": "#006a70",
+                        "on-primary-container": "#705e00",
+                        "outline": "#999077",
+                        "outline-variant": "#4d4732",
+                        "on-primary-fixed-variant": "#544600",
+                        "inverse-on-surface": "#303030",
+                        "on-secondary-fixed-variant": "#004f4f",
+                        "error": "#ffb4ab"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0px",
+                        "lg": "0px",
+                        "xl": "0px",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Manrope"],
+                        "label": ["Space Grotesk"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        .skew-fix { transform: skewX(-2deg); }
+        .neo-shadow { box-shadow: 8px 8px 0px 0px rgba(0, 127, 127, 1); }
+        .neo-shadow-yellow { box-shadow: 8px 8px 0px 0px rgba(255, 215, 0, 1); }
+        .hard-stop-shadow { box-shadow: 6px 6px 0px 0px #000000; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body selection:bg-primary-container selection:text-black">
+<!-- TopAppBar -->
+<header class="bg-stone-950 dark:bg-[#131313] border-b-4 border-white flex justify-between items-center w-full px-6 py-4 sticky top-0 z-[100]">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-white hover:skew-x-1 transition-transform active:translate-y-1">menu</button>
+<h1 class="font-headline font-black italic text-[#FFD700] -skew-x-2 text-2xl tracking-tighter uppercase">KINETIC_NOTES</h1>
+</div>
+<div class="flex items-center gap-6">
+<div class="hidden md:flex gap-8 font-headline font-bold uppercase tracking-tighter text-white">
+<a class="text-white hover:skew-x-1 transition-transform" href="#">Notes</a>
+<a class="text-white hover:skew-x-1 transition-transform" href="#">Tags</a>
+<a class="text-[#FFD700] hover:skew-x-1 transition-transform" href="#">Archive</a>
+</div>
+<button class="material-symbols-outlined text-white hover:skew-x-1 transition-transform active:translate-y-1">search</button>
+</div>
+</header>
+<main class="min-h-screen pb-32">
+<!-- Search Section -->
+<section class="px-6 pt-12 max-w-6xl mx-auto">
+<div class="mb-12">
+<h2 class="font-headline text-5xl md:text-7xl font-black uppercase tracking-tighter mb-4 text-white">
+                    ARCHIVE <span class="text-primary-container">VAULT</span>
+</h2>
+<p class="font-label text-sm uppercase tracking-widest text-secondary-container font-bold">Cold storage for your kinetic thoughts</p>
+</div>
+<!-- Prominent Search Bar -->
+<div class="relative mb-16">
+<div class="absolute inset-0 bg-secondary-container translate-x-2 translate-y-2"></div>
+<div class="relative bg-black border-4 border-white flex items-center p-2 group transition-transform hover:-translate-y-1 hover:-translate-x-1">
+<span class="material-symbols-outlined text-white px-4 text-3xl">search</span>
+<input class="w-full bg-transparent border-none text-white font-headline text-2xl md:text-3xl font-bold placeholder:text-surface-container-highest focus:ring-0 uppercase py-4" placeholder="QUERY THE ARCHIVE..." type="text"/>
+<button class="bg-primary-container text-black font-headline font-black px-8 py-4 border-l-4 border-white hover:bg-white transition-colors uppercase">Execute</button>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex flex-wrap gap-4 mb-12">
+<button class="bg-primary-container text-black border-2 border-white px-6 py-2 font-headline font-bold uppercase text-sm -skew-x-6 hover:skew-x-0 transition-transform">All Time</button>
+<button class="bg-surface-container-high text-white border-2 border-white/20 px-6 py-2 font-headline font-bold uppercase text-sm -skew-x-6 hover:bg-secondary-container hover:text-white transition-all">Last 30 Days</button>
+<button class="bg-surface-container-high text-white border-2 border-white/20 px-6 py-2 font-headline font-bold uppercase text-sm -skew-x-6 hover:bg-secondary-container transition-all">Work</button>
+<button class="bg-surface-container-high text-white border-2 border-white/20 px-6 py-2 font-headline font-bold uppercase text-sm -skew-x-6 hover:bg-secondary-container transition-all">Ideas</button>
+</div>
+<!-- Archived Results Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<!-- Result Card 1 -->
+<div class="group relative">
+<div class="absolute inset-0 bg-surface-container-high translate-x-2 translate-y-2 border-2 border-white opacity-20"></div>
+<div class="relative bg-surface-container-lowest border-4 border-white p-6 transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 flex flex-col h-full grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-surface-container-high text-white/60 font-headline font-bold text-[10px] px-3 py-1 uppercase tracking-widest border border-white/20">Archived 12.04.23</span>
+<span class="material-symbols-outlined text-white/40 group-hover:text-primary-container">unarchive</span>
+</div>
+<h3 class="font-headline text-2xl font-black mb-4 leading-none text-white/80 group-hover:text-white uppercase">Neural Network Architecture Specs</h3>
+<p class="font-body text-on-surface-variant text-sm mb-8 flex-grow">Initial drafts for the kinetic editor interface. Focused on high-friction typography and neon-brutalist grids...</p>
+<div class="flex gap-2">
+<span class="text-[10px] font-bold uppercase tracking-tighter text-secondary-container">#system</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter text-secondary-container">#design</span>
+</div>
+</div>
+</div>
+<!-- Result Card 2 -->
+<div class="group relative">
+<div class="absolute inset-0 bg-surface-container-high translate-x-2 translate-y-2 border-2 border-white opacity-20"></div>
+<div class="relative bg-surface-container-lowest border-4 border-white transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 flex flex-col h-full grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 overflow-hidden">
+<div class="h-40 bg-cover bg-center grayscale border-b-2 border-white" data-alt="abstract geometric 3D rendering with sharp edges and monochromatic teal and black lighting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDCiky5w40iV2UcjyydYiUSAs9t71uOQYiRi-DlpoozRopOW_u7OtNfW3O0mlsRxb6L5tYJxAxU5GypPFpLu3TtKGPdHoHJU3e3Kua1n6OOU1pcZG-xIWT8zlEE2gaqXa9_hxEhfL8fMtmHy4fFfk-MOLl_BR6nqHhi03sjayWIeUCmpzlGEiEvq4HtbZzoQD_dm76-H5OLrLGPSl6uvaMxZAm7HgCAdPXyj2HFr3jMsBjcJa0FwXk7knzUDgHHh3_JpIHayqQhIdM')"></div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-surface-container-high text-white/60 font-headline font-bold text-[10px] px-3 py-1 uppercase tracking-widest border border-white/20">Archived 09.02.23</span>
+<span class="material-symbols-outlined text-white/40 group-hover:text-primary-container">unarchive</span>
+</div>
+<h3 class="font-headline text-2xl font-black mb-4 leading-none text-white/80 group-hover:text-white uppercase">Visual Research: 90s Editorial</h3>
+<p class="font-body text-on-surface-variant text-sm flex-grow">Exploring the intersection of Ray Gun magazine aesthetics and modern web standards...</p>
+</div>
+</div>
+</div>
+<!-- Result Card 3 -->
+<div class="group relative">
+<div class="absolute inset-0 bg-secondary-container translate-x-2 translate-y-2 opacity-10"></div>
+<div class="relative bg-surface-container-lowest border-4 border-white p-6 transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 flex flex-col h-full grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-surface-container-high text-white/60 font-headline font-bold text-[10px] px-3 py-1 uppercase tracking-widest border border-white/20">Archived 15.01.23</span>
+<span class="material-symbols-outlined text-white/40 group-hover:text-primary-container">unarchive</span>
+</div>
+<h3 class="font-headline text-2xl font-black mb-4 leading-none text-white/80 group-hover:text-white uppercase">Q1 Performance Benchmarks</h3>
+<div class="bg-surface-container-high p-4 border-2 border-white/10 mb-6">
+<div class="flex justify-between text-[10px] font-bold uppercase mb-2">
+<span class="text-white/40">Efficiency</span>
+<span class="text-primary-container">98.2%</span>
+</div>
+<div class="h-2 bg-black border border-white/20">
+<div class="h-full bg-primary-container w-[98%]"></div>
+</div>
+</div>
+<p class="font-body text-on-surface-variant text-sm mb-8">Legacy data regarding the kinetic engine's response time during high-load scenarios.</p>
+<div class="flex gap-2 mt-auto">
+<span class="text-[10px] font-bold uppercase tracking-tighter text-secondary-container">#legacy</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter text-secondary-container">#stats</span>
+</div>
+</div>
+</div>
+<!-- Result Card 4 (Text Only) -->
+<div class="group relative md:col-span-2">
+<div class="absolute inset-0 bg-primary-container translate-x-2 translate-y-2 opacity-5"></div>
+<div class="relative bg-surface-container-lowest border-4 border-white p-8 transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 flex flex-col md:flex-row gap-8 grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100">
+<div class="md:w-1/3">
+<span class="bg-surface-container-high text-white/60 font-headline font-bold text-[10px] px-3 py-1 uppercase tracking-widest border border-white/20 mb-4 inline-block">Archived 02.11.22</span>
+<h3 class="font-headline text-3xl font-black leading-none text-white/80 group-hover:text-white uppercase mt-2">The Kinetic Manifesto (Ver 0.1)</h3>
+</div>
+<div class="md:w-2/3 border-l-4 border-white/10 pl-8">
+<p class="font-body text-on-surface-variant text-md mb-6 italic leading-relaxed">"We reject the rounded corner. We reject the soft drop shadow. We embrace the friction of the grid. Data should not just be read, it should be experienced through architectural tension."</p>
+<div class="flex justify-between items-center">
+<div class="flex gap-4">
+<span class="text-[10px] font-bold uppercase tracking-tighter text-secondary-container">#theory</span>
+<span class="text-[10px] font-bold uppercase tracking-tighter text-secondary-container">#foundations</span>
+</div>
+<button class="material-symbols-outlined text-white/40 group-hover:text-primary-container text-3xl">unarchive</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Result Card 5 -->
+<div class="group relative">
+<div class="absolute inset-0 bg-surface-container-high translate-x-2 translate-y-2 border-2 border-white opacity-20"></div>
+<div class="relative bg-surface-container-lowest border-4 border-white p-6 transition-all group-hover:-translate-y-2 group-hover:-translate-x-2 flex flex-col h-full grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100">
+<div class="flex justify-between items-start mb-6">
+<span class="bg-surface-container-high text-white/60 font-headline font-bold text-[10px] px-3 py-1 uppercase tracking-widest border border-white/20">Archived 20.08.22</span>
+<span class="material-symbols-outlined text-white/40 group-hover:text-primary-container">unarchive</span>
+</div>
+<h3 class="font-headline text-2xl font-black mb-4 leading-none text-white/80 group-hover:text-white uppercase">Deprecated Color Palette V2</h3>
+<div class="grid grid-cols-4 gap-2 mb-6">
+<div class="aspect-square bg-blue-600 border border-white/20"></div>
+<div class="aspect-square bg-purple-600 border border-white/20"></div>
+<div class="aspect-square bg-rose-600 border border-white/20"></div>
+<div class="aspect-square bg-orange-600 border border-white/20"></div>
+</div>
+<p class="font-body text-on-surface-variant text-sm">Testing vibrant gradients before moving to the high-contrast Neo-Brutalist standard.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Empty State Meta-Instruction -->
+<div class="mt-24 px-6 text-center max-w-2xl mx-auto">
+<div class="inline-block p-12 border-4 border-dashed border-white/20">
+<span class="material-symbols-outlined text-white/20 text-6xl mb-4">inventory_2</span>
+<p class="font-headline text-xl font-bold text-white/30 uppercase tracking-tighter">End of Archive Search Results</p>
+<p class="font-body text-white/20 text-sm mt-2 uppercase tracking-widest">Adjust query parameters for deeper excavation</p>
+</div>
+</div>
+</main>
+<!-- NavigationDrawer (Hidden on Mobile, showing desktop logic) -->
+<aside class="hidden lg:flex fixed left-0 top-0 h-full w-80 bg-stone-950 dark:bg-[#131313] border-r-4 border-white flex-col gap-4 p-8 z-[90] mt-[80px] shadow-[8px_0px_0px_0px_rgba(0,127,127,1)]">
+<h2 class="font-['Space_Grotesk'] font-bold text-white text-xl uppercase mb-4 tracking-tighter">CATEGORIES</h2>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 text-white/80 hover:translate-x-1 transition-transform hover:text-[#FFD700] p-3" href="#">
+<span class="material-symbols-outlined">work</span>
+<span class="font-headline font-bold uppercase">Work</span>
+</a>
+<a class="flex items-center gap-4 text-white/80 hover:translate-x-1 transition-transform hover:text-[#FFD700] p-3" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-headline font-bold uppercase">Personal</span>
+</a>
+<a class="flex items-center gap-4 text-white/80 hover:translate-x-1 transition-transform hover:text-[#FFD700] p-3" href="#">
+<span class="material-symbols-outlined">lightbulb</span>
+<span class="font-headline font-bold uppercase">Ideas</span>
+</a>
+<a class="flex items-center gap-4 text-white/80 hover:translate-x-1 transition-transform hover:text-[#FFD700] p-3" href="#">
+<span class="material-symbols-outlined">check_circle</span>
+<span class="font-headline font-bold uppercase">Tasks</span>
+</a>
+</nav>
+<div class="mt-auto pt-8 border-t-2 border-white/10">
+<div class="bg-secondary-container p-4 border-2 border-white -rotate-2">
+<p class="font-headline font-black text-white uppercase text-xs">Archive Capacity</p>
+<p class="font-headline text-3xl font-black text-white italic">84%</p>
+<div class="h-3 bg-black border border-white mt-2">
+<div class="h-full bg-primary-container w-[84%]"></div>
+</div>
+</div>
+</div>
+</aside>
+<!-- BottomNavBar (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-2 bg-stone-950 dark:bg-[#131313] border-t-4 border-white md:hidden">
+<a class="flex flex-col items-center justify-center text-white opacity-70 px-4 py-1" href="#">
+<span class="material-symbols-outlined">sticky_note_2</span>
+<span class="font-['Manrope'] font-bold text-[12px] uppercase">Notes</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white opacity-70 px-4 py-1" href="#">
+<span class="material-symbols-outlined">label</span>
+<span class="font-['Manrope'] font-bold text-[12px] uppercase">Tags</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#FFD700] text-black border-2 border-white -translate-y-2 -translate-x-1 shadow-[4px_4px_0px_0px_rgba(255,255,255,1)] px-4 py-1 scale-95" href="#">
+<span class="material-symbols-outlined">archive</span>
+<span class="font-['Manrope'] font-bold text-[12px] uppercase">Archive</span>
+</a>
+<a class="flex flex-col items-center justify-center text-white opacity-70 px-4 py-1" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-['Manrope'] font-bold text-[12px] uppercase">Settings</span>
+</a>
+</nav>
+</body></html>
