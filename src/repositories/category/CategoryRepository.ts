@@ -14,20 +14,46 @@ export class CategoryRepository extends BaseRepository<Category, CategoryCreateD
     super(getDB().categories)
   }
 
+  /**
+   * 创建分类，添加必要的默认字段
+   */
+  async create(data: CategoryCreateDTO): Promise<Category> {
+    const now = Date.now()
+    const newCategory: Category = {
+      id: crypto.randomUUID(),
+      name: String(data.name),
+      slug: String(data.slug),
+      color: data.color,
+      icon: data.icon ? String(data.icon) : undefined,
+      note_count: 0,
+      sort_order: typeof data.sort_order === 'number' ? data.sort_order : 0,
+      is_preset: false,
+      // SyncableEntity fields
+      cloud_id: undefined,
+      sync_status: 'local',
+      local_version: 1,
+      cloud_version: undefined,
+      created_at: now,
+      updated_at: now,
+      last_sync_at: undefined,
+      is_deleted: false,
+      deleted_at: undefined,
+    }
+
+    await this.table.add(newCategory)
+    return newCategory
+  }
+
   async findBySlug(slug: string): Promise<Category | null> {
-    const category = await this.table
-      .where('slug')
-      .equals(slug)
-      .and(cat => !cat.is_deleted)
-      .first()
-    return category ?? null
+    const categories = await this.table
+      .filter(cat => cat.slug === slug && !cat.is_deleted)
+      .toArray()
+    return categories[0] ?? null
   }
 
   async findPresets(): Promise<Category[]> {
     return this.table
-      .where('is_preset')
-      .equals(true as unknown as boolean)
-      .and(cat => !cat.is_deleted)
+      .filter(cat => cat.is_preset && !cat.is_deleted)
       .toArray()
   }
 

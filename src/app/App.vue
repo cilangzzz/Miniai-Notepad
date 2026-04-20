@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { ref, computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { useResponsive } from '@/composables/useResponsive'
 import TopAppBar from '@/components/common/TopAppBar.vue'
 import BottomNavBar from '@/components/common/BottomNavBar.vue'
@@ -9,6 +9,9 @@ import NavigationDrawer from '@/components/common/NavigationDrawer.vue'
 const route = useRoute()
 const router = useRouter()
 const { isMobile, isDesktop } = useResponsive()
+
+// Mobile drawer state
+const mobileDrawerOpen = ref(false)
 
 // Current navigation item based on route
 const currentNav = computed(() => {
@@ -24,7 +27,11 @@ const currentNav = computed(() => {
 
 // Handlers
 function handleMenuClick() {
-  // Toggle drawer - could use a uiStore
+  mobileDrawerOpen.value = !mobileDrawerOpen.value
+}
+
+function handleCloseDrawer() {
+  mobileDrawerOpen.value = false
 }
 
 function handleSearchClick() {
@@ -37,27 +44,25 @@ function handleAvatarClick() {
 
 function handleNavigate(path: string) {
   router.push(path)
+  mobileDrawerOpen.value = false
 }
 
 function handleCategorySelect(categoryId: string) {
-  // Navigate to notes filtered by category
   router.push({ path: '/notes', query: { category: categoryId } })
+  mobileDrawerOpen.value = false
 }
 </script>
 
 <template>
-  <div
-    class="app-container min-h-screen bg-background text-on-background font-body selection:bg-primary-container selection:text-black"
-    :class="{ 'has-drawer': isDesktop }"
-  >
-    <!-- Top App Bar -->
+  <div class="min-h-screen bg-background text-on-background font-body">
+    <!-- Top App Bar - Fixed at top, height 80px -->
     <TopAppBar
       @menu-click="handleMenuClick"
       @search-click="handleSearchClick"
       @avatar-click="handleAvatarClick"
     />
 
-    <!-- Desktop Navigation Drawer -->
+    <!-- Desktop Navigation Drawer - Fixed below header -->
     <NavigationDrawer
       v-if="isDesktop"
       :visible="true"
@@ -65,12 +70,32 @@ function handleCategorySelect(categoryId: string) {
       @select="handleCategorySelect"
     />
 
-    <!-- Main Content -->
+    <!-- Mobile Drawer Overlay -->
+    <div
+      v-if="mobileDrawerOpen && isMobile"
+      class="fixed inset-0 bg-black/80 z-40"
+      @click="handleCloseDrawer"
+    />
+
+    <!-- Mobile Navigation Drawer - Slide in from left -->
+    <Transition name="drawer">
+      <NavigationDrawer
+        v-if="mobileDrawerOpen && isMobile"
+        :visible="true"
+        :mobile="true"
+        :active-id="currentNav"
+        @select="handleCategorySelect"
+        @navigate="handleNavigate"
+      />
+    </Transition>
+
+    <!-- Main Content Area - Proper padding for fixed navigation -->
     <main
       :class="[
-        'pt-[72px]',
-        isDesktop && 'md:ml-72',
-        isMobile && 'pb-[80px]',
+        'min-h-screen',
+        'pt-[88px]',
+        isDesktop && 'md:ml-[288px]',
+        isMobile && 'pb-[100px]',
       ]"
     >
       <router-view v-slot="{ Component }">
@@ -80,7 +105,7 @@ function handleCategorySelect(categoryId: string) {
       </router-view>
     </main>
 
-    <!-- Mobile Bottom Navigation -->
+    <!-- Mobile Bottom Navigation - Fixed at bottom -->
     <BottomNavBar
       v-if="isMobile"
       :active-id="currentNav"
@@ -96,7 +121,7 @@ function handleCategorySelect(categoryId: string) {
 /* Material Symbols */
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
-/* Neo-Brutalist base styles */
+/* Font families */
 .font-headline {
   font-family: 'Space Grotesk', sans-serif;
 }
@@ -116,12 +141,23 @@ function handleCategorySelect(categoryId: string) {
   opacity: 0;
 }
 
+/* Mobile drawer transition */
+.drawer-enter-active,
+.drawer-leave-active {
+  transition: transform 300ms ease;
+}
+
+.drawer-enter-from,
+.drawer-leave-to {
+  transform: translateX(-100%);
+}
+
 /* Material Symbols styling */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Neo Gold */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -133,7 +169,6 @@ function handleCategorySelect(categoryId: string) {
 
 ::-webkit-scrollbar-thumb {
   background: #FFD700;
-  border: 4px solid white;
 }
 
 ::-webkit-scrollbar-thumb:hover {

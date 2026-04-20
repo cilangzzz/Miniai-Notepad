@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { CardColor } from '@/types/entities'
+import type { CardColor, FontWeight } from '@/types/entities'
 
 interface Props {
   cardColor: CardColor
-  fontWeight: number
+  fontWeight: FontWeight
 }
 
 const props = defineProps<Props>()
 
 const emit = defineEmits<{
   colorChange: [color: CardColor]
-  fontWeightChange: [weight: number]
+  fontWeightChange: [weight: FontWeight]
 }>()
 
 const cardColors: { value: CardColor; bgClass: string; label: string }[] = [
@@ -21,12 +21,11 @@ const cardColors: { value: CardColor; bgClass: string; label: string }[] = [
   { value: 'gray', bgClass: 'bg-surface-container-highest', label: 'Gray' },
 ]
 
-const fontWeightOptions: { value: number; label: string }[] = [
-  { value: 300, label: 'Light' },
-  { value: 400, label: 'Normal' },
-  { value: 600, label: 'SemiBold' },
-  { value: 700, label: 'Bold' },
-  { value: 800, label: 'ExtraBold' },
+const fontWeightOptions: { value: FontWeight; label: string }[] = [
+  { value: 'normal', label: 'Light' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'bold', label: 'Bold' },
+  { value: 'extrabold', label: 'ExtraBold' },
 ]
 
 const fontWeightPosition = computed(() => {

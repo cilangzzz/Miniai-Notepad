@@ -19,6 +19,8 @@ export const useNoteStore = defineStore('note', () => {
   })
   const loading = ref(false)
   const error = ref<string | null>(null)
+  const isSaving = ref(false)
+  const savingIds = ref(new Set<string>())
 
   // ========== Getters ==========
   const filteredNotes = computed(() => {
@@ -60,6 +62,19 @@ export const useNoteStore = defineStore('note', () => {
     notes.value.filter(n => n.is_pinned && !n.is_archived)
       .sort((a, b) => (b.pinned_at || 0) - (a.pinned_at || 0))
   )
+
+  const unpinnedNotes = computed(() =>
+    notes.value.filter(n => !n.is_pinned && !n.is_archived)
+      .sort((a, b) => b.updated_at - a.updated_at)
+  )
+
+  const archivedNotes = computed(() =>
+    notes.value.filter(n => n.is_archived)
+  )
+
+  const archivedCount = computed(() => archivedNotes.value.length)
+
+  const totalActiveCount = computed(() => notes.value.filter(n => !n.is_archived).length)
 
   const recentNotes = computed(() =>
     notes.value
@@ -214,6 +229,58 @@ export const useNoteStore = defineStore('note', () => {
     }
   }
 
+  async function bulkDeleteNotes(ids: string[]) {
+    loading.value = true
+    error.value = null
+    try {
+      await Promise.all(ids.map(id => noteRepo.delete(id)))
+      notes.value = notes.value.filter(n => !ids.includes(n.id))
+      if (currentNote.value && ids.includes(currentNote.value.id)) {
+        currentNote.value = null
+      }
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : '批量删除笔记失败'
+      throw e
+    } finally {
+      loading.value = false
+    }
+  }
+
+  async function bulkArchiveNotes(ids: string[]) {
+    loading.value = true
+    error.value = null
+    try {
+      await Promise.all(ids.map(id => noteRepo.archive(id)))
+      const now = Date.now()
+      ids.forEach(id => {
+        const note = notes.value.find(n => n.id === id)
+        if (note) {
+          note.is_archived = true
+          note.archived_at = now
+        }
+      })
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : '批量归档笔记失败'
+      throw e
+    } finally {
+      loading.value = false
+    }
+  }
+
+  function clearCurrentNote() {
+    currentNote.value = null
+  }
+
+  function isSavingNote(id: string): boolean {
+    return savingIds.value.has(id)
+  }
+
+  async function initialize() {
+    if (notes.value.length === 0) {
+      await fetchNotes()
+    }
+  }
+
   async function searchNotes(keyword: string) {
     loading.value = true
     error.value = null
@@ -293,10 +360,16 @@ export const useNoteStore = defineStore('note', () => {
     sort,
     loading,
     error,
+    isSaving,
+    savingIds,
     // Getters
     filteredNotes,
     notesByCategory,
     pinnedNotes,
+    unpinnedNotes,
+    archivedNotes,
+    archivedCount,
+    totalActiveCount,
     recentNotes,
     // Actions
     fetchNotes,
@@ -308,10 +381,15 @@ export const useNoteStore = defineStore('note', () => {
     deleteNote,
     pinNote,
     unpinNote,
+    bulkDeleteNotes,
+    bulkArchiveNotes,
     searchNotes,
     setFilter,
     setSort,
     clearFilter,
-    setCurrentNote
+    setCurrentNote,
+    clearCurrentNote,
+    isSavingNote,
+    initialize
   }
 })

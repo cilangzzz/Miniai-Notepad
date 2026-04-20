@@ -21,12 +21,12 @@ export class TagRepository extends BaseRepository<Tag, TagCreateDTO, TagUpdateDT
     const now = Date.now()
     const newTag: Tag = {
       id: crypto.randomUUID(),
-      name: data.name,
+      name: String(data.name),
       color: data.color || 'yellow',
-      rotation: data.rotation ?? Math.random() * 6 - 3,
+      rotation: typeof data.rotation === 'number' ? data.rotation : Math.random() * 6 - 3,
       usage_count: 0,
-      start_date: data.start_date,
-      end_date: data.end_date,
+      start_date: data.start_date ? String(data.start_date) : undefined,
+      end_date: data.end_date ? String(data.end_date) : undefined,
       // SyncableEntity fields
       cloud_id: undefined,
       sync_status: 'local',

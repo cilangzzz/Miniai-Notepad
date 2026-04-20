@@ -20,18 +20,19 @@ export class NoteRepository extends BaseRepository<Note, NoteCreateDTO, NoteUpda
    */
   async create(data: NoteCreateDTO): Promise<Note> {
     const now = Date.now()
+    // Convert to plain object for IndexedDB compatibility
     const newNote: Note = {
       id: crypto.randomUUID(),
-      title: data.title,
-      content: data.content,
-      category_id: data.category_id,
-      tags: data.tags || [],
+      title: String(data.title),
+      content: String(data.content),
+      category_id: String(data.category_id),
+      tags: Array.isArray(data.tags) ? [...data.tags] : [],
       card_type: data.card_type || 'text',
       card_color: data.card_color || 'yellow',
       font_weight: data.font_weight || 'normal',
       is_archived: false,
-      is_pinned: data.is_pinned || false,
-      reminder_at: data.reminder_at,
+      is_pinned: Boolean(data.is_pinned),
+      reminder_at: data.reminder_at ? Number(data.reminder_at) : undefined,
       reminder_status: data.reminder_at ? 'pending' : undefined,
       attachments: undefined,
       // SyncableEntity fields

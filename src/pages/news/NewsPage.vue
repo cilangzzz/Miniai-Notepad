@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNews } from '@/composables/useNews'
+import { useResponsive } from '@/composables/useResponsive'
 import NewsList from '@/components/business/news/NewsList.vue'
 import NewsDetail from '@/components/business/news/NewsDetail.vue'
 import NewsRefreshBtn from '@/components/business/news/NewsRefreshBtn.vue'
-import TopAppBar from '@/components/common/TopAppBar.vue'
-import BottomNavBar from '@/components/common/BottomNavBar.vue'
-import NavigationDrawer from '@/components/common/NavigationDrawer.vue'
 import FilterChip from '@/components/common/FilterChip.vue'
 import type { NewsArticle } from '@/types/entities'
 
 const router = useRouter()
+const { isMobile } = useResponsive()
 const { articles, loading, hasMore, selectedCategory, fetchNews, refreshNews, setCategory, toggleFavorite } = useNews()
 
 // State
@@ -58,10 +57,6 @@ function handleSaveToNote(article: NewsArticle) {
   router.push(`/notes/new?source=news&id=${article.id}`)
 }
 
-function handleMenuClick() {}
-
-const currentNav = 'news'
-
 onMounted(() => {
   if (articles.value.length === 0) {
     fetchNews()
@@ -70,49 +65,44 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="news-page min-h-screen bg-background">
-    <!-- Top App Bar -->
-    <TopAppBar @menu-click="handleMenuClick" />
+  <div class="news-page px-6 md:px-12 max-w-7xl mx-auto">
+    <!-- Refresh Button - Fixed position -->
+    <NewsRefreshBtn
+      :loading="loading"
+      :class="isMobile ? 'top-[96px]' : 'top-[96px]'"
+      @click="handleRefresh"
+    />
 
-    <!-- Desktop Navigation Drawer -->
-    <NavigationDrawer :visible="true" />
+    <!-- Page Header -->
+    <header class="mb-8">
+      <span class="bg-secondary-container text-white px-4 py-1 font-headline font-bold text-sm mb-4 inline-block border-2 border-white uppercase">
+        Daily Curation
+      </span>
+      <h1 class="font-headline font-black text-4xl md:text-6xl text-white uppercase tracking-tighter -skew-x-2">
+        NEWS<br /><span class="text-primary-container">FEED</span>
+      </h1>
+    </header>
 
-    <!-- Refresh Button -->
-    <NewsRefreshBtn :loading="loading" @click="handleRefresh" />
-
-    <!-- Main Content -->
-    <main class="pt-[72px] pb-[80px] px-4 md:px-12 md:ml-[288px]">
-      <!-- Page Header -->
-      <header class="mb-8">
-        <h1 class="font-headline font-black text-4xl md:text-5xl text-primary uppercase tracking-tighter -skew-x-2">
-          NEWS
-        </h1>
-        <p class="font-headline font-bold text-sm text-white/60 uppercase mt-2">
-          DAILY INFORMATION CURATION
-        </p>
-      </header>
-
-      <!-- Category Filter -->
-      <section class="mb-8 flex gap-2">
-        <FilterChip
-          v-for="cat in categories"
-          :key="cat.value"
-          :label="cat.label"
-          :active="selectedCategory === cat.value"
-          @click="handleCategoryChange(cat.value)"
-        />
-      </section>
-
-      <!-- News List -->
-      <NewsList
-        :articles="articles"
-        :loading="loading"
-        :has-more="hasMore"
-        @article-click="handleArticleClick"
-        @refresh="handleRefresh"
-        @load-more="handleLoadMore"
+    <!-- Category Filter -->
+    <section class="mb-8 flex flex-wrap gap-2">
+      <FilterChip
+        v-for="cat in categories"
+        :key="cat.value"
+        :label="cat.label"
+        :active="selectedCategory === cat.value"
+        @click="handleCategoryChange(cat.value)"
       />
-    </main>
+    </section>
+
+    <!-- News List -->
+    <NewsList
+      :articles="articles"
+      :loading="loading"
+      :has-more="hasMore"
+      @article-click="handleArticleClick"
+      @refresh="handleRefresh"
+      @load-more="handleLoadMore"
+    />
 
     <!-- News Detail (overlay) -->
     <NewsDetail
@@ -121,12 +111,6 @@ onMounted(() => {
       @back="handleBack"
       @favorite="handleFavorite"
       @save-to-note="handleSaveToNote"
-    />
-
-    <!-- Mobile Bottom Navigation -->
-    <BottomNavBar
-      :active-id="currentNav"
-      @navigate="(route) => router.push(route)"
     />
   </div>
 </template>

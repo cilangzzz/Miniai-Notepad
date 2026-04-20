@@ -107,8 +107,8 @@ export const useFinanceStore = defineStore('finance', () => {
     ]
     return transactions
       .sort((a, b) => {
-        const dateA = new Date(a.date).getTime()
-        const dateB = new Date(b.date).getTime()
+        const dateA = typeof a.date === 'number' ? a.date : new Date(a.date).getTime()
+        const dateB = typeof b.date === 'number' ? b.date : new Date(b.date).getTime()
         return dateB - dateA
       })
       .slice(0, 10)
@@ -228,13 +228,17 @@ export const useFinanceStore = defineStore('finance', () => {
   }
 
   function prevMonth() {
-    const [year, month] = selectedMonth.value.split('-').map(Number)
+    const parts = selectedMonth.value.split('-')
+    const year = Number(parts[0])
+    const month = Number(parts[1])
     const prevMonthDate = new Date(year, month - 2, 1)
     selectedMonth.value = formatMonth(prevMonthDate)
   }
 
   function nextMonth() {
-    const [year, month] = selectedMonth.value.split('-').map(Number)
+    const parts = selectedMonth.value.split('-')
+    const year = Number(parts[0])
+    const month = Number(parts[1])
     const nextMonthDate = new Date(year, month, 1)
     selectedMonth.value = formatMonth(nextMonthDate)
   }

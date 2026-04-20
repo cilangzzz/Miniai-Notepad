@@ -21,7 +21,7 @@ import type { Note, CardColor } from '@/types/entities'
 const router = useRouter()
 const route = useRoute()
 const { isMobile } = useResponsive()
-const { showToast } = useToast()
+const toast = useToast()
 const { notes, createNote, updateNote, fetchNoteById } = useNotes()
 const { categories } = useCategories()
 const { tags } = useTags()
@@ -34,7 +34,7 @@ const noteDraft = ref({
   tags: [] as string[],
   card_type: 'text' as 'text' | 'image' | 'task' | 'quote',
   card_color: 'yellow' as CardColor,
-  font_weight: 700,
+  font_weight: 'normal' as 'normal' | 'medium' | 'bold' | 'extrabold',
   is_pinned: false,
   reminder_at: undefined as number | undefined,
 })
@@ -98,14 +98,14 @@ async function handleSave() {
   try {
     if (isNewNote.value) {
       await createNote(noteDraft.value)
-      showToast('Note created successfully', 'success')
+      toast.success('Note created successfully')
     } else {
       await updateNote(route.params.id as string, noteDraft.value)
-      showToast('Note updated successfully', 'success')
+      toast.success('Note updated successfully')
     }
     router.push('/notes')
   } catch (error) {
-    showToast('Failed to save note', 'error')
+    toast.error('Failed to save note')
   } finally {
     isSaving.value = false
   }
@@ -135,7 +135,7 @@ function handleColorChange(color: CardColor) {
   noteDraft.value.card_color = color
 }
 
-function handleFontWeightChange(weight: number) {
+function handleFontWeightChange(weight: 'normal' | 'medium' | 'bold' | 'extrabold') {
   noteDraft.value.font_weight = weight
 }
 

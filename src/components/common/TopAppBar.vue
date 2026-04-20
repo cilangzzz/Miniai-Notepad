@@ -22,7 +22,7 @@ const emit = defineEmits<{
 
 <template>
   <header
-    class="bg-background border-b-4 border-white flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50"
+    class="bg-background border-b-4 border-white flex justify-between items-center w-full h-[80px] px-6 py-4 fixed top-0 left-0 right-0 z-50"
   >
     <!-- Left: Menu + Logo -->
     <div class="flex items-center gap-4">

@@ -123,12 +123,12 @@ export function useNotes() {
   }
 
   function updateDraft(field: keyof Note, value: Note[keyof Note]) {
-    draftNote.value[field] = value
+    ;(draftNote.value as Record<string, unknown>)[field] = value
   }
 
   // Check if a note is currently being saved
   function isSaving(id: string) {
-    return noteStore.isSaving(id)
+    return noteStore.isSavingNote(id)
   }
 
   // Initialize notes on mount

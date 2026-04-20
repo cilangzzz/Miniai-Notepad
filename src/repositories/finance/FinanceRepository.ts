@@ -268,11 +268,11 @@ class IncomeRepository extends BaseRepository<Income, IncomeCreateDTO, IncomeUpd
     const now = Date.now()
     const newIncome: Income = {
       id: crypto.randomUUID(),
-      amount: data.amount,
-      source: data.source,
-      date: data.date,
-      note: data.note,
-      category: data.category,
+      amount: Number(data.amount),
+      source: String(data.source),
+      date: String(data.date),
+      note: data.note ? String(data.note) : undefined,
+      category: data.category ? String(data.category) : undefined,
       // SyncableEntity fields
       cloud_id: undefined,
       sync_status: 'local',
@@ -301,11 +301,11 @@ class ExpenseRepository extends BaseRepository<Expense, ExpenseCreateDTO, Expens
     const now = Date.now()
     const newExpense: Expense = {
       id: crypto.randomUUID(),
-      amount: data.amount,
-      category: data.category,
-      date: data.date,
-      note: data.note,
-      budget_id: data.budget_id,
+      amount: Number(data.amount),
+      category: String(data.category),
+      date: String(data.date),
+      note: data.note ? String(data.note) : undefined,
+      budget_id: data.budget_id ? String(data.budget_id) : undefined,
       // SyncableEntity fields
       cloud_id: undefined,
       sync_status: 'local',

@@ -4,6 +4,20 @@ module.exports = {
     './src/**/*.{vue,js,ts,jsx,tsx}',
     './public/index.html',
   ],
+  safelist: [
+    // Ensure these arbitrary value classes are generated
+    'pt-[88px]',
+    'md:ml-[288px]',
+    'pb-[100px]',
+    'bottom-[88px]',
+    'h-[80px]',
+    'h-[72px]',
+    'h-[calc(100vh-80px)]',
+    'top-[80px]',
+    'top-[96px]',
+    'w-[288px]',
+    'min-w-[56px]',
+  ],
   theme: {
     extend: {
       colors: {
@@ -55,7 +69,7 @@ module.exports = {
         'outline': '#999077',
         'outline-variant': '#4d4732',
         'surface-tint': '#e9c400',
-        // Short aliases for convenience
+        // Short aliases
         'surfaceHigh': '#2a2a2a',
         'surfaceHighest': '#353535',
         'surfaceLow': '#1b1b1b',
@@ -84,7 +98,7 @@ module.exports = {
         'neo-white': '6px 6px 0px 0px rgba(255, 255, 255, 1)',
         'neo-gold': '8px 8px 0px 0px #ffd700',
         'neo-teal': '8px 8px 0px 0px #007f7f',
-        'neo-small': '4px 4px 0px 0px rgba(0, 0, 0, 1)',
+        'neo-small': '4px 4px 0px 0px rgba(255, 255, 255, 1)',
         'neo-hard': '6px 6px 0px 0px rgba(53, 53, 53, 1)',
         'neo-hover': '12px 12px 0px 0px rgba(0, 0, 0, 1)',
         'sidebar': '8px 0px 0px 0px rgba(0, 127, 127, 1)',
@@ -92,11 +106,17 @@ module.exports = {
       spacing: {
         '72': '72px',
         '88': '88px',
+        '100': '100px',
         '120': '120px',
+        '288': '288px',
       },
       screens: {
-        'mobile': '768px',
-        'tablet': '1024px',
+        // Override default screens to match our breakpoints
+        'sm': '640px',
+        'md': '768px',  // MOBILE breakpoint - tablet starts here
+        'lg': '1024px', // TABLET breakpoint - desktop starts here
+        'xl': '1280px',
+        '2xl': '1536px',
       },
       skew: {
         '-1': '-1deg',

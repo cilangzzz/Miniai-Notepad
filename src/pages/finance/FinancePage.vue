@@ -2,13 +2,11 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useFinance } from '@/composables/useFinance'
+import { useResponsive } from '@/composables/useResponsive'
 import FinanceNumberCard from '@/components/business/finance/FinanceNumberCard.vue'
 import TrendChart from '@/components/business/finance/TrendChart.vue'
 import CategoryPieChart from '@/components/business/finance/CategoryPieChart.vue'
 import TransactionItem from '@/components/business/finance/TransactionItem.vue'
-import TopAppBar from '@/components/common/TopAppBar.vue'
-import BottomNavBar from '@/components/common/BottomNavBar.vue'
-import NavigationDrawer from '@/components/common/NavigationDrawer.vue'
 import BaseFab from '@/components/base/BaseFab.vue'
 import BaseModal from '@/components/base/BaseModal.vue'
 import BaseInput from '@/components/base/BaseInput.vue'
@@ -16,6 +14,7 @@ import BaseButton from '@/components/base/BaseButton.vue'
 import FilterChip from '@/components/common/FilterChip.vue'
 
 const router = useRouter()
+const { isMobile } = useResponsive()
 const {
   incomes,
   expenses,
@@ -84,24 +83,30 @@ const recentTransactions = computed(() => {
   const all: { id: string; type: 'income' | 'expense'; amount: number; category: string; source?: string; date: string; note?: string }[] = []
 
   incomes.value.forEach(i => {
+    const dateStr = typeof i.date === 'number'
+      ? new Date(i.date).toISOString().split('T')[0]
+      : i.date
     all.push({
       id: i.id,
       type: 'income',
       amount: i.amount,
       category: '',
       source: i.source,
-      date: new Date(i.date).toISOString().split('T')[0],
+      date: dateStr,
       note: i.note,
     })
   })
 
   expenses.value.forEach(e => {
+    const dateStr = typeof e.date === 'number'
+      ? new Date(e.date).toISOString().split('T')[0]
+      : e.date
     all.push({
       id: e.id,
       type: 'expense',
       amount: e.amount,
       category: e.category,
-      date: new Date(e.date).toISOString().split('T')[0],
+      date: dateStr,
       note: e.note,
     })
   })
@@ -126,14 +131,14 @@ async function handleSaveRecord() {
     await addIncome({
       amount,
       source: newSource.value,
-      date: new Date(newDate.value).getTime(),
+      date: newDate.value,
       note: newNote.value,
     })
   } else {
     await addExpense({
       amount,
       category: newCategory.value,
-      date: new Date(newDate.value).getTime(),
+      date: newDate.value,
       note: newNote.value,
     })
   }
@@ -153,84 +158,76 @@ function handleDelete(id: string) {
   // Delete transaction
 }
 
-function handleMenuClick() {}
-
-const currentNav = 'finance'
-
 onMounted(() => {
   loadData()
 })
 </script>
 
 <template>
-  <div class="finance-page min-h-screen bg-background">
-    <!-- Top App Bar -->
-    <TopAppBar @menu-click="handleMenuClick" />
+  <div class="finance-page px-6 md:px-12 max-w-7xl mx-auto">
+    <!-- Page Header -->
+    <header class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+      <div>
+        <span class="bg-secondary-container text-white px-4 py-1 font-headline font-bold text-sm mb-4 inline-block border-2 border-white uppercase">
+          Financial Overview
+        </span>
+        <h1 class="font-headline font-black text-4xl md:text-6xl text-white uppercase tracking-tighter -skew-x-2">
+          FINANCE<br /><span class="text-primary-container">TRACKER</span>
+        </h1>
+      </div>
 
-    <!-- Desktop Navigation Drawer -->
-    <NavigationDrawer :visible="true" />
+      <!-- Month Selector -->
+      <div class="flex gap-2">
+        <FilterChip
+          v-for="m in months"
+          :key="m"
+          :label="m.split('-')[1]"
+          :active="selectedMonth === m"
+          @click="handleMonthChange(m)"
+        />
+      </div>
+    </header>
 
-    <!-- Main Content -->
-    <main class="pt-[72px] pb-[80px] px-4 md:px-12 md:ml-[288px]">
-      <!-- Page Header -->
-      <header class="mb-12 flex justify-between items-end">
-        <div>
-          <h1 class="font-headline font-black text-4xl md:text-5xl text-primary uppercase tracking-tighter -skew-x-2">
-            FINANCE
-          </h1>
-          <p class="font-headline font-bold text-sm text-white/60 uppercase mt-2">
-            TRACK YOUR MONEY
-          </p>
-        </div>
+    <!-- Summary Cards -->
+    <section class="grid gap-8 mb-16 grid-cols-1 md:grid-cols-3">
+      <FinanceNumberCard type="income" :amount="monthlyIncome" label="MONTHLY INCOME" />
+      <FinanceNumberCard type="expense" :amount="monthlyExpense" label="MONTHLY EXPENSE" />
+      <FinanceNumberCard type="balance" :amount="monthlyBalance" label="BALANCE" />
+    </section>
 
-        <!-- Month Selector -->
-        <div class="flex gap-2">
-          <FilterChip
-            v-for="m in months"
-            :key="m"
-            :label="m.split('-')[1]"
-            :active="selectedMonth === m"
-            @click="handleMonthChange(m)"
-          />
-        </div>
-      </header>
+    <!-- Trend Chart -->
+    <section class="mb-16">
+      <TrendChart :data="trendData" />
+    </section>
 
-      <!-- Summary Cards -->
-      <section class="grid gap-8 mb-16 grid-cols-1 md:grid-cols-3">
-        <FinanceNumberCard type="income" :amount="monthlyIncome" label="MONTHLY INCOME" />
-        <FinanceNumberCard type="expense" :amount="monthlyExpense" label="MONTHLY EXPENSE" />
-        <FinanceNumberCard type="balance" :amount="monthlyBalance" label="BALANCE" />
-      </section>
+    <!-- Category Pie Chart -->
+    <section class="mb-16">
+      <CategoryPieChart :data="pieData" />
+    </section>
 
-      <!-- Trend Chart -->
-      <section class="mb-16">
-        <TrendChart :data="trendData" />
-      </section>
-
-      <!-- Category Pie Chart -->
-      <section class="mb-16">
-        <CategoryPieChart :data="pieData" />
-      </section>
-
-      <!-- Recent Transactions -->
-      <section class="mb-16">
-        <h2 class="font-headline font-bold text-xs text-secondary uppercase tracking-widest mb-8">
-          RECENT TRANSACTIONS
-        </h2>
-        <div class="bg-surfaceLowest border-4 border-white shadow-[6px_6px_0px_0px_rgba(255,255,255,1)]">
-          <TransactionItem
-            v-for="tx in recentTransactions"
-            :key="tx.id"
-            :transaction="tx"
-            @edit="handleEdit"
-            @delete="handleDelete"
-          />
-        </div>
-      </section>
-    </main>
+    <!-- Recent Transactions -->
+    <section class="mb-16">
+      <h2 class="font-headline font-bold text-xs text-secondary-container uppercase tracking-widest mb-8">
+        RECENT TRANSACTIONS
+      </h2>
+      <div class="bg-surface-container-lowest border-4 border-white shadow-neo-white">
+        <TransactionItem
+          v-for="tx in recentTransactions"
+          :key="tx.id"
+          :transaction="tx"
+          @edit="handleEdit"
+          @delete="handleDelete"
+        />
+      </div>
+    </section>
 
     <!-- FAB -->
-    <BaseFab icon="add" color="gold" @click="handleAddRecord" />
+    <BaseFab
+      icon="add"
+      color="gold"
+      :class="isMobile ? 'bottom-[88px]' : 'bottom-8'"
+      @click="handleAddRecord"
+    />
 
     <!-- Add Record Modal -->
     <BaseModal v-model:visible="showAddModal" title="ADD RECORD">
@@ -263,9 +260,6 @@ onMounted(() => {
         <BaseButton variant="primary" @click="handleSaveRecord">SAVE</BaseButton>
       </div>
     </BaseModal>
-
-    <!-- Mobile Bottom Navigation -->
-    <BottomNavBar :active-id="currentNav" @navigate="(route) => router.push(route)" />
   </div>
 </template>
 
