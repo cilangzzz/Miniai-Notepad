@@ -1,3 +1,4 @@
+import type { SyncableEntity } from './syncable.types'
 import type { Income, IncomeCreateDTO, IncomeUpdateDTO, INCOME_SOURCES } from './finance.types'
 
 /**
