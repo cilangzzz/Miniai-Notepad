@@ -1,6 +1,7 @@
 // Pinia Store 统一导出
 export { useNoteStore } from './modules/noteStore'
 export { useCategoryStore } from './modules/categoryStore'
+export { useTagStore } from './modules/tagStore'
 export { useArchiveStore } from './modules/archiveStore'
 export { useFinanceStore } from './modules/financeStore'
 export { useNewsStore } from './modules/newsStore'
