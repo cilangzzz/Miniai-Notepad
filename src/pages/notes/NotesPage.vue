@@ -9,12 +9,11 @@ import BottomNavBar from '@/components/common/BottomNavBar.vue'
 import NavigationDrawer from '@/components/common/NavigationDrawer.vue'
 import BaseFab from '@/components/base/BaseFab.vue'
 import SearchBar from '@/components/common/SearchBar.vue'
-import SortButton from '@/components/common/SortButton.vue'
 import EmptyState from '@/components/common/EmptyState.vue'
 
 const router = useRouter()
 const { isMobile } = useResponsive()
-const { notes, loading, loadNotes, createNote, archiveNote, togglePin } = useNotes()
+const { notes, loading, fetchNotes, createNote, archiveNote, pinNote, unpinNote } = useNotes()
 
 // Search and sort
 const searchQuery = ref('')
@@ -60,15 +59,16 @@ function handleArchive(id: string) {
 }
 
 function handlePin(id: string) {
-  togglePin(id)
+  const note = notes.value.find(n => n.id === id)
+  if (note?.is_pinned) {
+    unpinNote(id)
+  } else {
+    pinNote(id)
+  }
 }
 
 function handleCreateNote() {
   router.push('/notes/new')
-}
-
-function handleSortChange(value: string) {
-  sortOption.value = value
 }
 
 function handleSearchExecute(query: string) {
@@ -87,12 +87,12 @@ function handleSearchClick() {
 const currentNav = 'notes'
 
 onMounted(() => {
-  loadNotes()
+  fetchNotes()
 })
 </script>
 
 <template>
-  <div class="notes-page min-h-screen bg-background">
+  <div class="notes-page min-h-screen bg-background text-on-background font-body selection:bg-primary-container selection:text-black">
     <!-- Top App Bar -->
     <TopAppBar
       @menu-click="handleMenuClick"
@@ -103,16 +103,30 @@ onMounted(() => {
     <NavigationDrawer :visible="!isMobile" />
 
     <!-- Main Content -->
-    <main class="pt-[72px] pb-[80px] px-4 md:px-12 md:ml-[288px]">
-      <!-- Page Header -->
-      <header class="mb-8">
-        <h1 class="font-headline font-black text-4xl md:text-5xl text-primary uppercase tracking-tighter -skew-x-2">
-          NOTES
-        </h1>
-        <p class="font-headline font-bold text-sm text-white/60 uppercase mt-2">
-          YOUR COLLECTION OF IDEAS
-        </p>
-      </header>
+    <main class="md:ml-72 pt-24 pb-32 px-6 md:px-12">
+      <!-- Header Section (matching reference) -->
+      <section class="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div>
+          <span class="text-primary-container font-headline font-black text-sm tracking-[0.3em] uppercase">Your Feed</span>
+          <h2 class="text-5xl md:text-7xl font-headline font-black text-white leading-none mt-2 -skew-x-1 uppercase">
+            Recent<br />Activity
+          </h2>
+        </div>
+        <div class="flex gap-4">
+          <button
+            type="button"
+            class="px-6 py-2 bg-surface-container-lowest border-4 border-white text-white font-headline font-bold uppercase hover:-translate-y-1 transition-transform shadow-neo-black rounded-none"
+          >
+            Filter
+          </button>
+          <button
+            type="button"
+            class="px-6 py-2 bg-primary-container border-4 border-white text-on-primary font-headline font-black uppercase hover:-translate-y-1 transition-transform shadow-neo-black rounded-none"
+          >
+            Sort By
+          </button>
+        </div>
+      </section>
 
       <!-- Search Bar (toggleable) -->
       <section v-if="showSearch" class="mb-8">
@@ -123,18 +137,7 @@ onMounted(() => {
         />
       </section>
 
-      <!-- Sort Controls -->
-      <section class="mb-8 flex items-center gap-4">
-        <SortButton
-          :active-value="sortOption"
-          @change="handleSortChange"
-        />
-        <span class="font-headline text-xs text-white/60 uppercase">
-          {{ filteredNotes.length }} notes
-        </span>
-      </section>
-
-      <!-- Notes List -->
+      <!-- Notes List (Bento Grid) -->
       <NoteList
         :notes="filteredNotes"
         :loading="loading"
@@ -164,14 +167,22 @@ onMounted(() => {
 
     <!-- Mobile Bottom Navigation -->
     <BottomNavBar
+      v-if="isMobile"
       :active-id="currentNav"
       @navigate="(route) => router.push(route)"
     />
+
+    <!-- Decorative elements -->
+    <div class="fixed top-24 right-0 w-32 h-32 bg-secondary-container/10 -z-10 -rotate-12 pointer-events-none"></div>
+    <div class="fixed bottom-0 left-0 w-64 h-64 bg-primary-container/5 -z-10 rotate-45 pointer-events-none"></div>
   </div>
 </template>
 
 <style scoped>
 .font-headline {
   font-family: 'Space Grotesk', sans-serif;
+}
+.font-body {
+  font-family: 'Manrope', sans-serif;
 }
 </style>

@@ -10,14 +10,6 @@ export default defineConfig({
       '@': resolve(__dirname, 'src'),
     },
   },
-  css: {
-    postcss: {
-      plugins: [
-        require('tailwindcss'),
-        require('autoprefixer'),
-      ],
-    },
-  },
   build: {
     target: 'esnext',
     minify: 'esbuild',

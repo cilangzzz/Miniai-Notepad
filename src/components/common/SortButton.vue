@@ -12,14 +12,12 @@ interface Props {
   activeValue?: string
 }
 
-const defaultOptions: SortOption[] = [
-  { value: 'newest', label: 'Newest', icon: 'arrow_downward' },
-  { value: 'oldest', label: 'Oldest', icon: 'arrow_upward' },
-  { value: 'title', label: 'Title', icon: 'sort_by_alpha' },
-]
-
 const props = withDefaults(defineProps<Props>(), {
-  options: defaultOptions,
+  options: () => [
+    { value: 'newest', label: 'Newest', icon: 'arrow_downward' },
+    { value: 'oldest', label: 'Oldest', icon: 'arrow_upward' },
+    { value: 'title', label: 'Title', icon: 'sort_by_alpha' },
+  ],
   activeValue: 'newest',
 })
 

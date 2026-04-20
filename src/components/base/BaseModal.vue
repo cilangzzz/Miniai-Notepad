@@ -51,7 +51,7 @@ function close() {
         :class="[
           'relative w-full',
           'bg-background border-4 border-white rounded-none',
-          'shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]',
+          'shadow-neo-white',
           sizeClasses,
         ]"
       >
@@ -62,7 +62,7 @@ function close() {
         >
           <h2
             v-if="title"
-            class="font-headline font-black text-xl uppercase text-primary -skew-x-2"
+            class="font-headline font-black text-xl uppercase text-primary-container -skew-x-2 italic"
           >
             {{ title }}
           </h2>
@@ -70,7 +70,7 @@ function close() {
           <button
             v-if="closable"
             type="button"
-            class="text-white hover:text-primary transition-colors"
+            class="text-white hover:skew-x-1 transition-transform"
             @click="close"
           >
             <span class="material-symbols-outlined text-2xl">close</span>

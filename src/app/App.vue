@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useResponsive } from '@/composables/useResponsive'
 import TopAppBar from '@/components/common/TopAppBar.vue'
 import BottomNavBar from '@/components/common/BottomNavBar.vue'
 import NavigationDrawer from '@/components/common/NavigationDrawer.vue'
 
 const route = useRoute()
+const router = useRouter()
 const { isMobile, isDesktop } = useResponsive()
 
 // Current navigation item based on route
@@ -27,21 +28,26 @@ function handleMenuClick() {
 }
 
 function handleSearchClick() {
-  // Navigate to search/archive
+  router.push('/archive')
 }
 
 function handleAvatarClick() {
-  // Navigate to settings
+  router.push('/settings')
 }
 
-function handleNavigate(route: string) {
-  // Router push
+function handleNavigate(path: string) {
+  router.push(path)
+}
+
+function handleCategorySelect(categoryId: string) {
+  // Navigate to notes filtered by category
+  router.push({ path: '/notes', query: { category: categoryId } })
 }
 </script>
 
 <template>
   <div
-    class="app-container min-h-screen bg-background"
+    class="app-container min-h-screen bg-background text-on-background font-body selection:bg-primary-container selection:text-black"
     :class="{ 'has-drawer': isDesktop }"
   >
     <!-- Top App Bar -->
@@ -56,13 +62,14 @@ function handleNavigate(route: string) {
       v-if="isDesktop"
       :visible="true"
       :active-id="currentNav"
+      @select="handleCategorySelect"
     />
 
     <!-- Main Content -->
     <main
       :class="[
         'pt-[72px]',
-        isDesktop && 'md:ml-[288px]',
+        isDesktop && 'md:ml-72',
         isMobile && 'pb-[80px]',
       ]"
     >
@@ -84,10 +91,10 @@ function handleNavigate(route: string) {
 
 <style>
 /* Global styles */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
 
 /* Material Symbols */
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
 
 /* Neo-Brutalist base styles */
 .font-headline {

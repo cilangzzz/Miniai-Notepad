@@ -5,6 +5,7 @@ interface Props {
   modelValue?: string
   placeholder?: string
   label?: string
+  badge?: string
   size?: 'sm' | 'md' | 'lg'
   disabled?: boolean
   error?: boolean
@@ -40,15 +41,14 @@ const sizeClasses = computed(() => {
 
 const inputClasses = computed(() => [
   'w-full rounded-none',
-  'bg-surfaceLowest border-4 border-white',
-  'text-text placeholder:text-surfaceHighest',
+  'bg-surface-container-lowest border-4 border-white',
+  'text-on-background placeholder:text-surface-container-highest',
   'font-body',
-  'focus:border-primary focus:outline-none',
-  'focus:shadow-[2px_2px_0px_0px_rgba(255,255,255,0.5)]',
-  'transition-all duration-200',
+  'focus:border-primary-container focus:outline-none',
+  'transition-colors duration-150',
   sizeClasses.value,
   props.disabled && 'opacity-50 cursor-not-allowed',
-  props.error && 'border-error focus:border-error',
+  props.error && 'border-error-container focus:border-error-container',
 ])
 
 function handleInput(event: Event) {
@@ -73,21 +73,12 @@ function handleKeydown(event: KeyboardEvent) {
 
 <template>
   <div class="base-input-wrapper">
-    <!-- Label -->
-    <label
-      v-if="label"
-      class="block mb-2 font-headline font-bold text-xs uppercase text-white/60 tracking-wider"
-    >
-      {{ label }}
-    </label>
-
-    <!-- Input container with Neo badge -->
-    <div class="relative">
+    <!-- Badge label -->
+    <div v-if="badge" class="relative">
       <span
-        v-if="label"
-        class="absolute -top-3 -left-2 bg-secondary text-white font-headline font-bold text-[10px] uppercase px-2 py-0.5 border border-white z-10"
+        class="absolute -top-3 -left-2 bg-secondary-container text-white font-headline font-bold text-[10px] uppercase px-2 py-0.5 border border-white z-10"
       >
-        {{ label }}
+        {{ badge }}
       </span>
 
       <input
@@ -104,10 +95,33 @@ function handleKeydown(event: KeyboardEvent) {
       />
     </div>
 
+    <!-- Regular label -->
+    <label
+      v-if="label && !badge"
+      class="block mb-2 font-headline font-bold text-xs uppercase text-white/60 tracking-widest"
+    >
+      {{ label }}
+    </label>
+
+    <!-- Input without badge -->
+    <input
+      v-if="!badge"
+      :type="type"
+      :value="modelValue"
+      :placeholder="placeholder"
+      :disabled="disabled"
+      :maxlength="maxlength"
+      :class="inputClasses"
+      @input="handleInput"
+      @focus="handleFocus"
+      @blur="handleBlur"
+      @keydown="handleKeydown"
+    />
+
     <!-- Error message -->
     <p
       v-if="error && errorMessage"
-      class="mt-2 text-xs text-error font-body uppercase"
+      class="mt-2 text-xs text-error-container font-headline uppercase"
     >
       {{ errorMessage }}
     </p>

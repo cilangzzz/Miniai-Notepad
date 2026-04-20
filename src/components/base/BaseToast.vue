@@ -19,10 +19,10 @@ const emit = defineEmits<{
 const visible = ref(true)
 
 const typeClasses: Record<string, string> = {
-  success: 'bg-primary text-black border-white',
-  error: 'bg-error text-white border-white',
-  warning: 'bg-secondary text-white border-white',
-  info: 'bg-surfaceHigh text-white border-white',
+  success: 'bg-primary-container text-on-primary border-white',
+  error: 'bg-error-container text-white border-white',
+  warning: 'bg-secondary-container text-white border-white',
+  info: 'bg-surface-container-high text-on-background border-white',
 }
 
 onMounted(() => {
@@ -41,7 +41,7 @@ onMounted(() => {
         'fixed top-24 left-1/2 -translate-x-1/2 z-[100]',
         'px-6 py-3 border-4 rounded-none',
         'font-headline font-bold uppercase text-sm',
-        'shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]',
+        'shadow-neo-small',
         typeClasses[type],
       ]"
     >

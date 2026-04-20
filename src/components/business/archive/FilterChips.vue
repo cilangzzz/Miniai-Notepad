@@ -23,23 +23,19 @@ interface Props {
   multiSelect?: boolean
 }
 
-const defaultTimeOptions: TimeFilterOption[] = [
-  { id: 'all', label: 'All Time', value: 'all' },
-  { id: 'last30', label: 'Last 30 Days', value: '30d' },
-  { id: 'last7', label: 'Last Week', value: '7d' },
-  { id: 'today', label: 'Today', value: '1d' },
-]
-
-const defaultCategoryOptions: CategoryFilterOption[] = [
-  { id: 'work', label: 'Work', color: 'yellow', icon: 'work' },
-  { id: 'personal', label: 'Personal', color: 'cyan', icon: 'person' },
-  { id: 'ideas', label: 'Ideas', color: 'white', icon: 'lightbulb' },
-  { id: 'tasks', label: 'Tasks', color: 'gray', icon: 'check_circle' },
-]
-
 const props = withDefaults(defineProps<Props>(), {
-  timeOptions: defaultTimeOptions,
-  categoryOptions: defaultCategoryOptions,
+  timeOptions: () => [
+    { id: 'all', label: 'All Time', value: 'all' },
+    { id: 'last30', label: 'Last 30 Days', value: '30d' },
+    { id: 'last7', label: 'Last Week', value: '7d' },
+    { id: 'today', label: 'Today', value: '1d' },
+  ],
+  categoryOptions: () => [
+    { id: 'work', label: 'Work', color: 'yellow', icon: 'work' },
+    { id: 'personal', label: 'Personal', color: 'cyan', icon: 'person' },
+    { id: 'ideas', label: 'Ideas', color: 'white', icon: 'lightbulb' },
+    { id: 'tasks', label: 'Tasks', color: 'gray', icon: 'check_circle' },
+  ],
   activeTimeFilter: 'all',
   activeCategoryFilters: () => [],
   multiSelect: true,
@@ -90,52 +86,31 @@ function isCategoryActive(filterId: string) {
 
 <template>
   <div class="neo-filter-chips">
-    <!-- Filter title -->
-    <div class="flex items-center justify-between mb-4">
-      <h3 class="font-headline font-bold uppercase tracking-wider text-sm text-white">
-        FILTER BY
-      </h3>
+    <!-- Filter chips -->
+    <div class="flex flex-wrap gap-4">
+      <FilterChip
+        v-for="option in timeOptions"
+        :key="option.id"
+        :label="option.label"
+        :active="localTimeFilter === option.id"
+        :skew="true"
+        @click="handleTimeClick(option.id)"
+      />
 
-      <!-- Reset button -->
-      <button
-        v-if="activeCount > 0"
-        type="button"
-        class="text-white/60 hover:text-white text-xs uppercase tracking-wider transition-colors"
-        @click="handleReset"
-      >
-        RESET
-      </button>
-    </div>
-
-    <!-- Time filter group -->
-    <div class="neo-filter-group mb-4">
-      <div class="flex flex-wrap gap-2">
-        <FilterChip
-          v-for="option in timeOptions"
-          :key="option.id"
-          :label="option.label"
-          :active="localTimeFilter === option.id"
-          @click="handleTimeClick(option.id)"
-        />
-      </div>
-    </div>
-
-    <!-- Category filter group -->
-    <div class="neo-filter-group">
-      <div class="flex flex-wrap gap-2">
-        <FilterChip
-          v-for="option in categoryOptions"
-          :key="option.id"
-          :label="option.label"
-          :icon="option.icon"
-          :active="isCategoryActive(option.id)"
-          @click="handleCategoryClick(option.id)"
-        />
-      </div>
+      <FilterChip
+        v-for="option in categoryOptions"
+        :key="option.id"
+        :label="option.label"
+        :icon="option.icon"
+        :active="isCategoryActive(option.id)"
+        :color="option.color as any"
+        :skew="true"
+        @click="handleCategoryClick(option.id)"
+      />
     </div>
 
     <!-- Active filter count -->
-    <div v-if="activeCount > 0" class="neo-filter-count mt-4 text-white/60 text-xs">
+    <div v-if="activeCount > 0" class="mt-4 text-white/60 text-xs uppercase">
       {{ activeCount }} filter(s) active
     </div>
   </div>

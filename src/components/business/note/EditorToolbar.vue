@@ -29,26 +29,25 @@ const emit = defineEmits<{
     <div class="flex items-center gap-4">
       <button
         type="button"
-        class="neo-icon-btn text-white hover:skew-x-1 transition-transform duration-150"
+        class="text-white hover:skew-x-1 transition-transform duration-150"
         @click="emit('close')"
       >
         <span class="material-symbols-outlined text-2xl">close</span>
       </button>
 
       <h1
-        class="font-headline font-black uppercase tracking-tighter text-primary -skew-x-2 text-xl italic"
+        class="font-headline font-black uppercase tracking-tighter text-primary-container -skew-x-2 text-xl italic"
       >
         KINETIC_NOTES
       </h1>
     </div>
 
     <!-- Right section -->
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-6">
       <!-- Undo -->
       <button
         type="button"
         :class="[
-          'neo-icon-btn',
           canUndo ? 'text-white hover:skew-x-1' : 'text-white/30 cursor-not-allowed',
           'transition-transform duration-150',
         ]"
@@ -62,7 +61,6 @@ const emit = defineEmits<{
       <button
         type="button"
         :class="[
-          'neo-icon-btn',
           canRedo ? 'text-white hover:skew-x-1' : 'text-white/30 cursor-not-allowed',
           'transition-transform duration-150',
         ]"
@@ -77,11 +75,10 @@ const emit = defineEmits<{
         v-if="showSave"
         type="button"
         :class="[
-          'neo-btn-yellow',
-          'flex items-center gap-2 px-4 py-2',
-          'bg-primary text-black border-2 border-white',
+          'flex items-center gap-2 px-4 py-1',
+          'bg-primary-container text-on-primary border-2 border-white',
           'font-headline font-bold uppercase text-xs',
-          'hover:skew-x-1 hover:-translate-y-1 transition-all duration-150',
+          'hover:skew-x-1 active:translate-y-1 transition-all duration-150',
           isSaving && 'opacity-50 cursor-not-allowed',
         ]"
         :disabled="isSaving"
@@ -104,13 +101,5 @@ const emit = defineEmits<{
 <style scoped>
 .font-headline {
   font-family: 'Space Grotesk', sans-serif;
-}
-
-.neo-icon-btn {
-  transition: transform 150ms ease;
-}
-
-.neo-btn-yellow {
-  transition: transform 150ms ease, box-shadow 150ms ease;
 }
 </style>

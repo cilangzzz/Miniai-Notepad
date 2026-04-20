@@ -9,6 +9,7 @@ interface Props {
   selected?: boolean
   removable?: boolean
   size?: 'sm' | 'md' | 'lg'
+  shadow?: 'none' | 'teal' | 'yellow' | 'black'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -17,6 +18,7 @@ const props = withDefaults(defineProps<Props>(), {
   selected: false,
   removable: false,
   size: 'md',
+  shadow: 'none',
 })
 
 const emit = defineEmits<{
@@ -26,11 +28,11 @@ const emit = defineEmits<{
 
 const colorClasses = computed(() => {
   const colors: Record<string, string> = {
-    yellow: 'bg-primary text-black border-white',
-    cyan: 'bg-secondary text-white border-white',
-    white: 'bg-white text-black border-black',
-    gray: 'bg-surfaceHighest text-white border-white',
-    dark: 'bg-surfaceLowest text-white border-white',
+    yellow: 'bg-primary-container text-on-primary border-white',
+    cyan: 'bg-secondary-container text-white border-white',
+    white: 'bg-white text-background border-background',
+    gray: 'bg-surface-container-highest text-on-background border-white',
+    dark: 'bg-surface-container-lowest text-on-background border-white',
   }
   return colors[props.color]
 })
@@ -44,7 +46,22 @@ const sizeClasses = computed(() => {
   return sizes[props.size]
 })
 
-const rotationStyle = computed(() => `rotate(${props.rotation}deg)`)
+const shadowClasses = computed(() => {
+  const shadows: Record<string, string> = {
+    none: '',
+    teal: 'shadow-neo-teal',
+    yellow: 'shadow-neo-gold',
+    black: 'shadow-neo-black',
+  }
+  return shadows[props.shadow]
+})
+
+const rotationStyle = computed(() => {
+  if (props.rotation !== 0) {
+    return `rotate(${props.rotation}deg)`
+  }
+  return ''
+})
 </script>
 
 <template>
@@ -52,12 +69,13 @@ const rotationStyle = computed(() => `rotate(${props.rotation}deg)`)
     :class="[
       'inline-flex items-center gap-1',
       'border-2 rounded-none',
-      'font-headline font-bold uppercase',
-      'transition-transform duration-300',
+      'font-headline font-black uppercase',
+      'transition-transform duration-150',
       'hover:rotate-0 cursor-pointer',
+      shadowClasses,
       colorClasses,
       sizeClasses,
-      selected && 'ring-2 ring-primary ring-offset-2 ring-offset-background',
+      selected && 'ring-2 ring-primary-container ring-offset-2 ring-offset-background',
     ]"
     :style="{ transform: rotationStyle }"
     @click="emit('click')"
@@ -67,7 +85,7 @@ const rotationStyle = computed(() => `rotate(${props.rotation}deg)`)
     <button
       v-if="removable"
       type="button"
-      class="ml-1 hover:text-primary transition-colors"
+      class="ml-1 hover:text-primary-container transition-colors"
       @click.stop="emit('remove')"
     >
       <span class="material-symbols-outlined text-xs">close</span>

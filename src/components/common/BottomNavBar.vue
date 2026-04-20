@@ -13,17 +13,15 @@ interface Props {
   activeId?: string
 }
 
-const defaultItems: NavItem[] = [
-  { id: 'notes', label: 'Notes', icon: 'sticky_note_2', route: '/notes' },
-  { id: 'categories', label: 'Tags', icon: 'label', route: '/categories' },
-  { id: 'archive', label: 'Archive', icon: 'archive', route: '/archive' },
-  { id: 'finance', label: 'Finance', icon: 'account_balance_wallet', route: '/finance' },
-  { id: 'news', label: 'News', icon: 'newspaper', route: '/news' },
-  { id: 'settings', label: 'Settings', icon: 'settings', route: '/settings' },
-]
-
 const props = withDefaults(defineProps<Props>(), {
-  items: defaultItems,
+  items: () => [
+    { id: 'notes', label: 'Notes', icon: 'sticky_note_2', route: '/notes' },
+    { id: 'categories', label: 'Tags', icon: 'label', route: '/categories' },
+    { id: 'archive', label: 'Archive', icon: 'archive', route: '/archive' },
+    { id: 'finance', label: 'Finance', icon: 'account_balance_wallet', route: '/finance' },
+    { id: 'news', label: 'News', icon: 'newspaper', route: '/news' },
+    { id: 'settings', label: 'Settings', icon: 'settings', route: '/settings' },
+  ],
   activeId: 'notes',
 })
 
@@ -41,10 +39,10 @@ const emit = defineEmits<{
       :key="item.id"
       type="button"
       :class="[
-        'flex flex-col items-center justify-center px-4 py-1 transition-all duration-200',
+        'flex flex-col items-center justify-center px-4 py-1 transition-all duration-150',
         item.id === activeId
-          ? 'bg-primary text-black border-2 border-white -translate-y-2 -translate-x-1 shadow-[4px_4px_0px_0px_rgba(255,255,255,1)]'
-          : 'text-white/70 hover:bg-secondary',
+          ? 'bg-primary-container text-on-primary border-2 border-white -translate-y-2 -translate-x-1 shadow-neo-small'
+          : 'text-white/70 hover:bg-secondary-container',
       ]"
       @click="emit('navigate', item.route)"
     >

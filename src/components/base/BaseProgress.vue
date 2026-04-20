@@ -22,9 +22,9 @@ const percentage = computed(() => {
 
 const colorClasses = computed(() => {
   const colors: Record<string, string> = {
-    gold: 'bg-primary',
+    gold: 'bg-primary-container',
     white: 'bg-white',
-    teal: 'bg-secondary',
+    teal: 'bg-secondary-container',
   }
   return colors[props.color]
 })
@@ -44,7 +44,7 @@ const sizeClasses = computed(() => {
     <!-- Track -->
     <div
       :class="[
-        'w-full bg-black border-2 border-white rounded-none',
+        'w-full bg-surface-container-lowest border-2 border-white rounded-none',
         sizeClasses,
       ]"
     >
@@ -61,7 +61,7 @@ const sizeClasses = computed(() => {
     <!-- Label -->
     <p
       v-if="showLabel"
-      class="font-headline text-xs text-white/60 mt-2 uppercase"
+      class="font-headline text-xs text-white/60 mt-2 uppercase tracking-widest"
     >
       {{ Math.round(percentage) }}%
     </p>

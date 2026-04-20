@@ -25,7 +25,7 @@ const {
   monthlyBalance,
   expenseByCategory,
   trendData,
-  loadFinanceData,
+  loadData,
   addIncome,
   addExpense,
   setMonth,
@@ -158,7 +158,7 @@ function handleMenuClick() {}
 const currentNav = 'finance'
 
 onMounted(() => {
-  loadFinanceData()
+  loadData()
 })
 </script>
 

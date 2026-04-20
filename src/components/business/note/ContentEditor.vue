@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 interface Props {
   modelValue: string
   maxLength?: number
@@ -26,7 +28,7 @@ const isOverLimit = computed(() => characterCount > props.maxLength)
   <div class="relative flex-grow">
     <!-- Badge -->
     <span
-      class="absolute -top-3 -left-2 bg-secondary text-white font-headline font-bold text-[10px] uppercase px-2 py-0.5 border border-white z-10"
+      class="absolute -top-3 -left-2 bg-secondary-container text-white font-headline font-bold text-[10px] uppercase px-2 py-0.5 border border-white z-10"
     >
       Manuscript
     </span>
@@ -38,11 +40,11 @@ const isOverLimit = computed(() => characterCount > props.maxLength)
       :placeholder="placeholder"
       :style="{ minHeight: `${minHeight}px` }"
       :class="[
-        'w-full bg-surfaceLowest border-4 border-white p-8',
-        'font-body text-lg leading-relaxed text-white',
-        'focus:outline-none focus:border-primary',
-        'placeholder:text-surfaceHighest content-editor resize-none',
-        isOverLimit && 'border-error focus:border-error',
+        'w-full bg-surface-container-lowest border-4 border-white p-8 rounded-none',
+        'font-body text-lg leading-relaxed text-on-background',
+        'focus:outline-none focus:border-primary-container',
+        'placeholder:text-surface-container-highest content-editor resize-none',
+        isOverLimit && 'border-error-container focus:border-error-container',
       ]"
       @input="(e) => emit('update:modelValue', (e.target as HTMLTextAreaElement).value)"
       @change="(e) => emit('change', (e.target as HTMLTextAreaElement).value)"
@@ -51,16 +53,12 @@ const isOverLimit = computed(() => characterCount > props.maxLength)
     <!-- Character count -->
     <div
       class="absolute bottom-2 right-4 font-headline text-xs"
-      :class="isOverLimit ? 'text-error' : 'text-surfaceHighest'"
+      :class="isOverLimit ? 'text-error-container' : 'text-surface-container-highest'"
     >
       {{ characterCount }} / {{ maxLength }}
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { computed } from 'vue'
-</script>
 
 <style scoped>
 .font-headline {

@@ -29,26 +29,21 @@ const getRotation = (index: number) => {
 </script>
 
 <template>
-  <div class="relative p-6 bg-surfaceLowest border-4 border-white">
-    <!-- Title bar -->
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="font-headline font-black text-xl uppercase tracking-tighter text-primary -skew-x-2">
-        TAGS_CATALOG
-      </h2>
+  <section class="bg-surface-container-high border-4 border-white p-6 relative">
+    <!-- Badge -->
+    <span
+      class="absolute -top-3 -left-2 bg-secondary-container text-white font-headline font-bold text-[10px] uppercase px-2 py-0.5 border border-white z-10"
+    >
+      Taxonomy
+    </span>
 
-      <button
-        v-if="editable"
-        type="button"
-        class="px-4 py-2 bg-secondary border-2 border-white text-white font-headline font-bold uppercase text-xs hover:bg-primary hover:text-black transition-all duration-150"
-        @click="emit('create')"
-      >
-        <span class="material-symbols-outlined text-sm mr-1">add</span>
-        NEW TAG
-      </button>
-    </div>
+    <!-- Title -->
+    <h3 class="font-headline font-bold text-xl mb-4 text-primary-container italic">
+      TAGS_CATALOG
+    </h3>
 
-    <!-- Tag grid -->
-    <div class="flex flex-wrap gap-4 items-center">
+    <!-- Tags -->
+    <div class="flex flex-wrap gap-2">
       <BaseTag
         v-for="(tag, index) in tags"
         :key="tag.id"
@@ -63,24 +58,15 @@ const getRotation = (index: number) => {
 
       <!-- Add tag button inline -->
       <button
-        v-if="editable && tags.length === 0"
+        v-if="editable"
         type="button"
-        class="bg-transparent text-white/50 border-2 border-white/20 border-dashed px-4 py-2 font-headline font-bold text-xs uppercase hover:text-white hover:border-white transition-all"
+        class="bg-transparent text-white/50 border-2 border-white/20 border-dashed px-3 py-1 font-headline font-bold text-xs hover:text-white hover:border-white transition-all rounded-none"
         @click="emit('create')"
       >
-        + ADD FIRST TAG
+        + ADD TAG
       </button>
     </div>
-
-    <!-- Empty state -->
-    <div
-      v-if="tags.length === 0 && !editable"
-      class="py-8 text-center"
-    >
-      <span class="material-symbols-outlined text-4xl mb-4 block text-white/40">label_off</span>
-      <p class="font-headline text-sm uppercase text-white/50">No tags yet</p>
-    </div>
-  </div>
+  </section>
 </template>
 
 <style scoped>

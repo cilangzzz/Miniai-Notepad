@@ -36,92 +36,81 @@ const formatArchivedTime = (timestamp: number) => {
 
 <template>
   <div class="neo-archive-results">
-    <!-- Results header -->
-    <div class="neo-results-header mb-6">
-      <h3 class="font-headline font-bold uppercase tracking-wider text-sm text-white">
-        ARCHIVE RESULTS
-        <span v-if="total > 0" class="text-white/60 ml-2">({{ total }} items)</span>
-      </h3>
-    </div>
-
     <!-- Loading state -->
     <div v-if="loading" class="neo-loading-state py-12">
       <div class="flex justify-center items-center">
-        <span class="material-symbols-outlined text-4xl text-primary animate-spin">progress_activity</span>
+        <span class="material-symbols-outlined text-4xl text-primary-container animate-spin">progress_activity</span>
         <span class="ml-4 font-headline uppercase tracking-wider text-white/60">Loading archive...</span>
       </div>
     </div>
 
     <!-- Archive cards grid -->
-    <div v-else-if="archivedNotes.length > 0" class="neo-results-grid">
+    <div v-else-if="archivedNotes.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <article
         v-for="note in archivedNotes"
         :key="note.id"
-        :class="[
-          'relative bg-background border-4 border-white transition-all duration-200 cursor-pointer',
-          hoveredCardId === note.id
-            ? 'shadow-[12px_12px_0_rgba(255,255,255,0.2)] -translate-x-1 -translate-y-1'
-            : 'shadow-[8px_8px_0_rgba(255,255,255,0.1)]',
-        ]"
-        @mouseenter="hoveredCardId = note.id"
-        @mouseleave="hoveredCardId = null"
-        @click="emit('click', note.id)"
+        class="group relative"
       >
+        <!-- Background shadow layer -->
+        <div class="absolute inset-0 bg-surface-container-high translate-x-2 translate-y-2 border-2 border-white opacity-20" />
+
+        <!-- Main card -->
         <div
           :class="[
-            'neo-card-content p-4 transition-all duration-200',
+            'relative bg-surface-container-lowest border-4 border-white p-6 transition-all duration-150 cursor-pointer flex flex-col h-full',
             hoveredCardId !== note.id && 'grayscale opacity-70',
-            hoveredCardId === note.id && 'grayscale-0 opacity-100',
+            hoveredCardId === note.id && 'grayscale-0 opacity-100 group-hover:-translate-y-2 group-hover:-translate-x-2',
           ]"
+          @mouseenter="hoveredCardId = note.id"
+          @mouseleave="hoveredCardId = null"
+          @click="emit('click', note.id)"
         >
           <!-- Header -->
-          <div class="flex items-start justify-between mb-3">
-            <h4 class="font-headline font-semibold text-lg text-white line-clamp-2">
-              {{ note.title }}
-            </h4>
-
-            <!-- Restore button -->
-            <button
-              type="button"
-              class="bg-secondary border-2 border-white p-2 transition-colors duration-150 hover:bg-primary"
-              @click.stop="emit('restore', note.id)"
-            >
-              <span class="material-symbols-outlined text-white text-sm">unarchive</span>
-            </button>
+          <div class="flex justify-between items-start mb-6">
+            <span class="bg-surface-container-high text-white/60 font-headline font-bold text-[10px] px-3 py-1 uppercase tracking-widest border border-white/20">
+              Archived {{ formatArchivedTime(note.archived_at || 0) }}
+            </span>
+            <span class="material-symbols-outlined text-white/40 group-hover:text-primary-container transition-colors">
+              unarchive
+            </span>
           </div>
 
+          <!-- Title -->
+          <h3 class="font-headline text-2xl font-black mb-4 leading-none text-white/80 group-hover:text-white uppercase">
+            {{ note.title }}
+          </h3>
+
           <!-- Content summary -->
-          <p class="font-body text-white/80 text-sm line-clamp-3 mb-4">
+          <p class="font-body text-on-surface-variant text-sm flex-grow mb-8">
             {{ truncatedContent(note.content) }}
           </p>
 
           <!-- Footer -->
-          <div class="flex items-center justify-between">
-            <span class="font-headline font-bold uppercase text-xs px-3 py-1 bg-secondary text-white">
-              {{ note.card_color }}
-            </span>
-            <span class="font-headline text-xs text-white/60">
-              Archived: {{ formatArchivedTime(note.archived_at || 0) }}
-            </span>
+          <div class="flex gap-2 mt-auto">
+            <span class="text-[10px] font-bold uppercase tracking-tighter text-secondary-container">#{{ note.card_color }}</span>
           </div>
         </div>
       </article>
     </div>
 
     <!-- Empty state -->
-    <div v-else class="neo-empty-state py-12 text-center">
-      <div class="bg-surfaceHigh border-4 border-white p-8 max-w-md mx-auto">
-        <span class="material-symbols-outlined text-5xl text-white/40 mx-auto mb-4 block">archive</span>
-        <p class="font-headline font-bold uppercase tracking-wider mb-2 text-white">NO ARCHIVED NOTES FOUND</p>
-        <p class="font-body text-white/60 text-sm">Adjust your query to find what you're looking for</p>
+    <div v-else class="py-24 text-center">
+      <div class="inline-block p-12 border-4 border-dashed border-white/20">
+        <span class="material-symbols-outlined text-white/20 text-6xl mb-4">inventory_2</span>
+        <p class="font-headline text-xl font-bold text-white/30 uppercase tracking-tighter">
+          End of Archive Search Results
+        </p>
+        <p class="font-body text-white/20 text-sm mt-2 uppercase tracking-widest">
+          Adjust query parameters for deeper excavation
+        </p>
       </div>
     </div>
 
     <!-- Load more -->
-    <div v-if="hasMore && !loading" class="neo-load-more py-8 text-center">
+    <div v-if="hasMore && !loading" class="py-8 text-center">
       <button
         type="button"
-        class="bg-surfaceHigh border-4 border-white px-8 py-3 font-headline font-bold uppercase tracking-wider text-white shadow-[8px_8px_0_rgba(255,255,255,0.1)] hover:-translate-x-1 hover:-translate-y-1 transition-all"
+        class="bg-surface-container-high border-4 border-white px-8 py-3 font-headline font-bold uppercase tracking-wider text-white shadow-neo-black hover:-translate-x-1 hover:-translate-y-1 transition-all"
         @click="emit('loadMore')"
       >
         LOAD MORE
@@ -136,37 +125,5 @@ const formatArchivedTime = (timestamp: number) => {
 }
 .font-body {
   font-family: 'Manrope', sans-serif;
-}
-
-.neo-results-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 24px;
-}
-
-@media (min-width: 768px) {
-  .neo-results-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .neo-results-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.line-clamp-3 {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
 }
 </style>

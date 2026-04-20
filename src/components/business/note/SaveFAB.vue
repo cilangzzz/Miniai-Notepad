@@ -19,15 +19,15 @@ const emit = defineEmits<{
 
 const buttonClasses = computed(() => [
   'fixed bottom-8 right-8',
-  'w-20 h-20',
+  'w-16 h-16',
   'flex items-center justify-center',
   'border-4 border-white rounded-none',
-  'transition-all duration-200',
+  'transition-all duration-150',
   props.isSaving || !props.isValid
     ? 'opacity-50 cursor-not-allowed'
-    : 'hover:-translate-y-1 hover:-translate-x-1 hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]',
+    : 'hover:-translate-y-1 hover:-translate-x-1 hover:shadow-neo-hover',
   'active:scale-95',
-  'bg-primary text-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]',
+  'bg-primary-container text-on-primary shadow-neo-black',
   'z-[60]',
 ])
 </script>

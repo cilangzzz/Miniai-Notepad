@@ -15,25 +15,27 @@ const emit = defineEmits<{
 
 const colorClasses = computed(() => {
   const colors: Record<CardColor, string> = {
-    yellow: 'bg-primary text-black',
-    cyan: 'bg-secondary text-white',
-    white: 'bg-white text-black',
-    gray: 'bg-surfaceHighest text-white',
-    dark: 'bg-surfaceLowest text-white',
+    yellow: 'bg-primary-container text-on-primary',
+    cyan: 'bg-secondary-container text-white',
+    white: 'bg-white text-background',
+    gray: 'bg-surface-container-high text-on-background',
+    dark: 'bg-surface-container-lowest text-on-background',
   }
   return colors[props.category.color]
 })
+
+const shadowClass = computed(() => 'shadow-neo-black')
 </script>
 
 <template>
   <article
     :class="[
       'relative border-4 border-white rounded-none',
-      'shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]',
+      shadowClass,
       'p-8 flex flex-col gap-4',
       'hover:-translate-y-1 hover:-translate-x-1',
-      'transition-all duration-200 cursor-pointer',
-      isActive && 'ring-4 ring-primary ring-offset-4',
+      'transition-all duration-150 cursor-pointer',
+      isActive && 'ring-4 ring-primary-container ring-offset-4',
       colorClasses,
     ]"
     @click="emit('select', category.id)"
@@ -44,7 +46,7 @@ const colorClasses = computed(() => {
     </span>
 
     <!-- Category name -->
-    <h3 class="font-headline font-black text-2xl uppercase tracking-tighter -skew-x-2">
+    <h3 class="font-headline font-black text-2xl uppercase tracking-tighter -skew-x-2 italic">
       {{ category.name }}
     </h3>
 
@@ -56,9 +58,9 @@ const colorClasses = computed(() => {
     <!-- Active indicator -->
     <div
       v-if="isActive"
-      class="absolute -top-2 -right-2 w-6 h-6 bg-primary border-2 border-white"
+      class="absolute -top-2 -right-2 w-6 h-6 bg-primary-container border-2 border-white"
     >
-      <span class="material-symbols-outlined text-xs text-black">check</span>
+      <span class="material-symbols-outlined text-xs text-on-primary">check</span>
     </div>
   </article>
 </template>

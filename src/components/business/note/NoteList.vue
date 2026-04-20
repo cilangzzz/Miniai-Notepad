@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import type { Note } from '@/types/entities'
+import NoteCard from './NoteCard.vue'
 
 interface Props {
   notes?: Note[]
@@ -22,8 +23,6 @@ const emit = defineEmits<{
   pin: [id: string]
 }>()
 
-const hoveredId = ref<string | null>(null)
-
 const pinnedNotes = computed(() => props.notes.filter(n => n.is_pinned))
 const regularNotes = computed(() => props.notes.filter(n => !n.is_pinned))
 </script>
@@ -35,7 +34,7 @@ const regularNotes = computed(() => props.notes.filter(n => !n.is_pinned))
       v-if="loading"
       class="flex justify-center py-12"
     >
-      <span class="material-symbols-outlined text-4xl text-primary animate-spin">progress_activity</span>
+      <span class="material-symbols-outlined text-4xl text-primary-container animate-spin">progress_activity</span>
     </div>
 
     <!-- Pinned notes section -->
@@ -43,10 +42,10 @@ const regularNotes = computed(() => props.notes.filter(n => !n.is_pinned))
       v-if="pinnedNotes.length > 0"
       class="mb-8"
     >
-      <h2 class="font-headline font-bold text-xs uppercase text-secondary tracking-widest mb-4">
+      <h2 class="font-headline font-bold text-xs uppercase text-secondary-container tracking-widest mb-4">
         PINNED
       </h2>
-      <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <NoteCard
           v-for="note in pinnedNotes"
           :key="note.id"
@@ -68,7 +67,7 @@ const regularNotes = computed(() => props.notes.filter(n => !n.is_pinned))
       >
         OTHERS
       </h2>
-      <div class="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+      <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         <NoteCard
           v-for="note in regularNotes"
           :key="note.id"
@@ -88,7 +87,7 @@ const regularNotes = computed(() => props.notes.filter(n => !n.is_pinned))
       class="py-12 text-center"
     >
       <span class="material-symbols-outlined text-5xl text-white/40 mb-4 block">note_stack</span>
-      <p class="font-headline font-bold text-lg uppercase text-white/60">
+      <p class="font-headline font-black text-lg uppercase text-white/60">
         NO NOTES YET
       </p>
       <p class="font-body text-sm text-white/40 mt-2">

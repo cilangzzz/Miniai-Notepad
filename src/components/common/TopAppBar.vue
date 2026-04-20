@@ -22,7 +22,7 @@ const emit = defineEmits<{
 
 <template>
   <header
-    class="fixed top-0 z-50 w-full bg-background border-b-4 border-white flex justify-between items-center px-6 py-4"
+    class="bg-background border-b-4 border-white flex justify-between items-center w-full px-6 py-4 fixed top-0 z-50"
   >
     <!-- Left: Menu + Logo -->
     <div class="flex items-center gap-4">
@@ -36,7 +36,7 @@ const emit = defineEmits<{
       </button>
 
       <h1
-        class="text-2xl font-black italic text-primary -skew-x-2 font-headline uppercase tracking-tighter"
+        class="text-2xl font-black italic text-primary-container -skew-x-2 font-headline uppercase tracking-tighter"
       >
         {{ title }}
       </h1>
@@ -56,7 +56,7 @@ const emit = defineEmits<{
       <button
         v-if="showAvatar"
         type="button"
-        class="w-10 h-10 bg-secondary border-2 border-white flex items-center justify-center overflow-hidden"
+        class="w-10 h-10 bg-secondary-container border-2 border-white flex items-center justify-center overflow-hidden"
         @click="emit('avatarClick')"
       >
         <span class="material-symbols-outlined text-white">person</span>

@@ -77,59 +77,105 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="categories-page min-h-screen bg-background">
-    <!-- Top App Bar -->
-    <TopAppBar
-      @menu-click="handleMenuClick"
-      @search-click="handleSearchClick"
-    />
-
-    <!-- Desktop Navigation Drawer -->
+  <div class="categories-page min-h-screen bg-background text-on-background font-body selection:bg-primary-container selection:text-black flex flex-col md:flex-row">
+    <!-- Navigation Drawer (Sidebar for Web) -->
     <NavigationDrawer :visible="true" />
 
-    <!-- Main Content -->
-    <main class="pt-[72px] pb-[80px] px-4 md:px-12 md:ml-[288px]">
-      <!-- Page Header -->
-      <header class="mb-12">
-        <h1 class="font-headline font-black text-4xl md:text-5xl text-primary uppercase tracking-tighter -skew-x-2">
-          CATEGORIES
-        </h1>
-        <p class="font-headline font-bold text-sm text-white/60 uppercase mt-2">
-          ORGANIZE YOUR THOUGHTS
-        </p>
-      </header>
+    <div class="flex-1 flex flex-col min-h-screen">
+      <!-- TopAppBar -->
+      <TopAppBar
+        @menu-click="handleMenuClick"
+        @search-click="handleSearchClick"
+      />
 
-      <!-- Category Grid -->
-      <section class="mb-16">
-        <h2 class="font-headline font-bold text-xs text-secondary uppercase tracking-widest mb-8">
-          PRESET CATEGORIES
-        </h2>
-        <div class="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-          <CategoryCard
-            v-for="category in categories"
-            :key="category.id"
-            :category="category"
-            :is-active="activeCategory === category.id"
-            @select="handleCategorySelect"
-          />
+      <!-- Main Content -->
+      <main class="flex-1 p-6 md:p-12 max-w-7xl mx-auto w-full md:ml-80">
+        <!-- Hero Header -->
+        <section class="mb-16">
+          <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div>
+              <span class="bg-secondary-container text-white px-4 py-1 font-headline font-bold text-sm mb-4 inline-block border-2 border-white rounded-none uppercase">
+                Organization Center
+              </span>
+              <h2 class="text-6xl md:text-8xl font-black font-headline leading-none tracking-tighter text-white uppercase italic -skew-x-2">
+                Tags & <br /><span class="text-primary-container">Labels</span>
+              </h2>
+            </div>
+            <div class="flex gap-4">
+              <button
+                type="button"
+                class="bg-white text-black p-4 font-black font-headline border-4 border-white shadow-neo-gold hover:-translate-y-1 hover:-translate-x-1 transition-all active:translate-y-0 active:translate-x-0 rounded-none uppercase"
+              >
+                NEW TAG
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Grid Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <!-- Category Management (Left Col) -->
+          <div class="lg:col-span-5 flex flex-col gap-8">
+            <!-- Active Categories -->
+            <div class="bg-surface-container-high border-4 border-white p-8 relative">
+              <div class="absolute -top-6 -left-2 bg-secondary-container border-2 border-white px-4 py-1 font-headline font-black text-white rounded-none uppercase">
+                Active Categories
+              </div>
+              <div class="space-y-4 mt-4">
+                <!-- Category Item -->
+                <div
+                  v-for="cat in categories"
+                  :key="cat.id"
+                  class="flex items-center justify-between p-4 bg-surface-container-lowest border-2 border-white hover:border-primary-container transition-colors group cursor-pointer"
+                  @click="handleCategorySelect(cat.id)"
+                >
+                  <div class="flex items-center gap-4">
+                    <span class="material-symbols-outlined text-primary-container">{{ cat.icon }}</span>
+                    <span class="font-headline font-extrabold text-xl uppercase">{{ cat.name }}</span>
+                  </div>
+                  <div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button class="p-2 hover:bg-surface-container-highest">
+                      <span class="material-symbols-outlined text-sm">edit</span>
+                    </button>
+                    <button class="p-2 hover:bg-error-container">
+                      <span class="material-symbols-outlined text-sm">delete</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Stats Panel -->
+            <StatsPanel :stats="stats" />
+          </div>
+
+          <!-- Tag Cloud (Right Col) -->
+          <div class="lg:col-span-7">
+            <TagCloud
+              :tags="tags"
+              :editable="true"
+              @select="handleTagSelect"
+              @create="handleTagCreate"
+              @remove="handleTagRemove"
+            />
+          </div>
         </div>
-      </section>
+      </main>
 
-      <!-- Tag Cloud -->
-      <section class="mb-16">
-        <TagCloud
-          :tags="tags"
-          @select="handleTagSelect"
-          @create="handleTagCreate"
-          @remove="handleTagRemove"
-        />
-      </section>
+      <!-- Mobile Bottom Navigation -->
+      <BottomNavBar
+        :active-id="currentNav"
+        @navigate="(route) => router.push(route)"
+      />
+    </div>
 
-      <!-- Stats Panel -->
-      <section>
-        <StatsPanel :stats="stats" />
-      </section>
-    </main>
+    <!-- Background Decoration -->
+    <div class="fixed top-20 right-20 -z-10 pointer-events-none opacity-10 rotate-12">
+      <span class="material-symbols-outlined text-[300px]">sell</span>
+    </div>
+    <div class="fixed bottom-20 left-1/2 -z-10 pointer-events-none opacity-5 -rotate-6">
+      <span class="material-symbols-outlined text-[400px]">category</span>
+    </div>
 
     <!-- Create Tag Modal -->
     <BaseModal
@@ -140,6 +186,7 @@ onMounted(async () => {
         v-model="newTagName"
         placeholder="Enter tag name..."
         :max-length="20"
+        badge="Tag Name"
       />
 
       <!-- Color picker -->
@@ -149,12 +196,12 @@ onMounted(async () => {
           :key="color"
           type="button"
           :class="[
-            'w-10 h-10 border-2 border-white',
-            color === 'yellow' ? 'bg-primary' : '',
-            color === 'cyan' ? 'bg-secondary' : '',
+            'w-10 h-10 border-2 border-white rounded-none',
+            color === 'yellow' ? 'bg-primary-container' : '',
+            color === 'cyan' ? 'bg-secondary-container' : '',
             color === 'white' ? 'bg-white' : '',
-            color === 'gray' ? 'bg-surfaceHighest' : '',
-            selectedTagColor === color ? 'ring-2 ring-primary ring-offset-2 ring-offset-background' : '',
+            color === 'gray' ? 'bg-surface-container-highest' : '',
+            selectedTagColor === color ? 'ring-2 ring-primary-container ring-offset-2 ring-offset-background' : '',
           ]"
           @click="selectedTagColor = color"
         />
@@ -169,17 +216,14 @@ onMounted(async () => {
         </BaseButton>
       </div>
     </BaseModal>
-
-    <!-- Mobile Bottom Navigation -->
-    <BottomNavBar
-      :active-id="currentNav"
-      @navigate="(route) => router.push(route)"
-    />
   </div>
 </template>
 
 <style scoped>
 .font-headline {
   font-family: 'Space Grotesk', sans-serif;
+}
+.font-body {
+  font-family: 'Manrope', sans-serif;
 }
 </style>

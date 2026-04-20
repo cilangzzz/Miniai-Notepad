@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import BaseProgress from '@/components/base/BaseProgress.vue'
 
 interface Props {
@@ -20,28 +21,18 @@ const formatSize = (mb: number) => `${mb.toFixed(1)}MB`
 </script>
 
 <template>
-  <div class="p-4 bg-surfaceHigh border-2 border-white shadow-[6px_6px_0px_0px_rgba(255,255,255,1)]">
-    <p class="font-headline font-bold text-xs uppercase mb-2 text-white/60">Storage</p>
+  <div class="bg-secondary-container p-4 border-2 border-white -rotate-2">
+    <p class="font-headline font-black text-white uppercase text-xs">Archive Capacity</p>
+    <p class="font-headline text-3xl font-black text-white italic">{{ Math.round(percentage) }}%</p>
 
-    <BaseProgress :value="percentage" :max="100" :show-label="false" />
-
-    <div class="flex justify-between mt-2">
-      <p class="font-headline text-xs text-white/60">{{ formatSize(used) }} / {{ formatSize(total) }}MB</p>
-      <button
-        v-if="used > 0"
-        type="button"
-        class="font-headline text-xs text-primary uppercase hover:underline"
-        @click="emit('clear')"
-      >
-        Clear Cache
-      </button>
+    <div class="h-3 bg-surface-container-lowest border border-white mt-2">
+      <div
+        class="h-full bg-primary-container transition-all duration-300"
+        :style="{ width: `${percentage}%` }"
+      />
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { computed } from 'vue'
-</script>
 
 <style scoped>
 .font-headline {

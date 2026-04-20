@@ -14,11 +14,11 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const colorClasses: Record<string, string> = {
-  yellow: 'bg-primary text-black',
-  cyan: 'bg-secondary text-white',
-  white: 'bg-white text-black',
-  gray: 'bg-surfaceHighest text-white',
-  dark: 'bg-surfaceLowest text-white',
+  yellow: 'bg-primary-container text-on-primary',
+  cyan: 'bg-secondary-container text-white',
+  white: 'bg-white text-background',
+  gray: 'bg-surface-container-highest text-on-background',
+  dark: 'bg-surface-container-lowest text-on-background',
 }
 
 const sizeClasses: Record<string, string> = {
@@ -33,7 +33,7 @@ const sizeClasses: Record<string, string> = {
     :class="[
       'inline-flex items-center justify-center',
       'border-2 border-white rounded-none',
-      'font-headline font-bold uppercase',
+      'font-headline font-black uppercase',
       colorClasses[color],
       sizeClasses[size],
     ]"

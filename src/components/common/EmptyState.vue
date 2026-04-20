@@ -21,22 +21,22 @@ const emit = defineEmits<{
 <template>
   <div class="py-12 text-center">
     <div
-      class="bg-surfaceHigh border-4 border-white p-8 max-w-md mx-auto shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+      class="bg-surface-container-high border-4 border-dashed border-white/20 p-12 max-w-md mx-auto"
     >
       <!-- Icon -->
-      <span class="material-symbols-outlined text-5xl text-white/40 mx-auto mb-4 block">
+      <span class="material-symbols-outlined text-6xl text-white/20 mx-auto mb-4 block">
         {{ icon }}
       </span>
 
       <!-- Title -->
       <p
-        class="font-headline font-bold text-lg uppercase tracking-wider mb-2 text-white"
+        class="font-headline font-black text-xl uppercase tracking-tighter mb-2 text-white/30"
       >
         {{ title }}
       </p>
 
       <!-- Description -->
-      <p class="font-body text-sm text-white/60 mb-4">
+      <p class="font-body text-sm text-white/20 uppercase tracking-widest">
         {{ description }}
       </p>
 
@@ -44,7 +44,7 @@ const emit = defineEmits<{
       <button
         v-if="actionLabel"
         type="button"
-        class="px-6 py-3 bg-primary text-black border-2 border-white font-headline font-bold uppercase text-sm shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 hover:-translate-x-1 transition-all"
+        class="mt-6 px-6 py-3 bg-primary-container text-on-primary border-2 border-white font-headline font-bold uppercase text-sm shadow-neo-black hover:-translate-y-1 hover:-translate-x-1 transition-all"
         @click="emit('action')"
       >
         {{ actionLabel }}

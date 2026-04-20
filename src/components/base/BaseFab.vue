@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { CardColor } from '@/types/entities'
 
 interface Props {
   icon?: string
@@ -24,9 +23,9 @@ const emit = defineEmits<{
 
 const colorClasses = computed(() => {
   const colors: Record<string, string> = {
-    gold: 'bg-primary text-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]',
-    white: 'bg-white text-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]',
-    teal: 'bg-secondary text-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]',
+    gold: 'bg-primary-container text-on-primary shadow-neo-black',
+    white: 'bg-white text-background shadow-neo-black',
+    teal: 'bg-secondary-container text-white shadow-neo-black',
   }
   return colors[props.color]
 })
@@ -54,7 +53,7 @@ const iconSize = computed(() => {
   const sizes: Record<string, string> = {
     sm: 'text-2xl',
     md: 'text-3xl',
-    lg: 'text-4xl',
+    lg: 'text-5xl',
   }
   return sizes[props.size]
 })
@@ -67,7 +66,7 @@ const iconSize = computed(() => {
       'fixed z-[60]',
       'border-4 border-white rounded-none',
       'flex items-center justify-center',
-      'hover:scale-105 transition-all duration-200',
+      'hover:scale-105 transition-all duration-150',
       'active:translate-y-2 active:shadow-none',
       'disabled:opacity-50 disabled:cursor-not-allowed',
       sizeClasses,

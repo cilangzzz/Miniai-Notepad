@@ -174,7 +174,7 @@ const availableTags = computed(() => tags.value.map(t => ({
 </script>
 
 <template>
-  <div class="edit-note-page min-h-screen bg-background">
+  <div class="edit-note-page min-h-screen bg-background text-on-background font-body selection:bg-primary-container selection:text-black">
     <!-- Editor Toolbar -->
     <EditorToolbar
       :can-undo="canUndo"
@@ -187,7 +187,7 @@ const availableTags = computed(() => tags.value.map(t => ({
     />
 
     <!-- Main Content -->
-    <main class="pt-[80px] pb-[120px] px-4 md:px-12 max-w-6xl mx-auto">
+    <main class="pt-24 pb-32 px-4 md:px-12 max-w-6xl mx-auto">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <!-- Left: Editors -->
         <div class="lg:col-span-8 flex flex-col gap-6">
@@ -205,7 +205,7 @@ const availableTags = computed(() => tags.value.map(t => ({
         </div>
 
         <!-- Right: Sidebar (Desktop) -->
-        <aside v-if="!isMobile" class="lg:col-span-4 flex flex-col gap-6">
+        <aside v-if="!isMobile" class="lg:col-span-4 flex flex-col gap-8">
           <TaxonomyPanel
             :tags="availableTags"
             :selected-ids="noteDraft.tags"
