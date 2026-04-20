@@ -72,3 +72,38 @@ body {
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
 }
+
+/* TipTap Editor Global Styles */
+.tiptap {
+  outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #666666;
+  pointer-events: none;
+  height: 0;
+}
+
+.tiptap:focus {
+  outline: none;
+}
+
+/* Editor scrollbar */
+.tiptap-editor::-webkit-scrollbar {
+  width: 8px;
+}
+
+.tiptap-editor::-webkit-scrollbar-track {
+  background: #0e0e0e;
+}
+
+.tiptap-editor::-webkit-scrollbar-thumb {
+  background: #ffd700;
+  border: 2px solid white;
+}
+
+.tiptap-editor::-webkit-scrollbar-thumb:hover {
+  background: #007f7f;
+}

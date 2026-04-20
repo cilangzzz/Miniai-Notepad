@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Note, CardColor, CardType } from '@/types/entities'
+import type { Note, CardColor } from '@/types/entities'
+import { safeRenderContent, stripHtml } from '@/utils/html'
 
 interface Props {
   note: Note
@@ -39,10 +40,14 @@ const shadowClass = computed(() => {
 })
 
 const truncatedContent = computed(() => {
-  if (props.compact) {
-    return props.note.content.slice(0, 50) + (props.note.content.length > 50 ? '...' : '')
-  }
-  return props.note.content.slice(0, 150) + (props.note.content.length > 150 ? '...' : '')
+  const maxLength = props.compact ? 50 : 150
+  // Use safeRenderContent for HTML support
+  return safeRenderContent(props.note.content, maxLength)
+})
+
+// Plain text version for certain card types
+const plainTextContent = computed(() => {
+  return stripHtml(props.note.content)
 })
 
 const formattedDate = computed(() => {
@@ -104,7 +109,7 @@ const cardTypeStyles = computed(() => {
         <h3 class="font-headline font-black text-2xl text-white mb-2 uppercase leading-tight">
           {{ note.title }}
         </h3>
-        <p class="text-white/80 text-sm font-medium">{{ truncatedContent }}</p>
+        <p class="text-white/80 text-sm font-medium" v-html="safeRenderContent(note.content, 100)" />
       </div>
     </template>
 
@@ -112,7 +117,7 @@ const cardTypeStyles = computed(() => {
     <template v-else-if="note.card_type === 'quote'">
       <span class="material-symbols-outlined text-background text-6xl mb-4">format_quote</span>
       <p class="text-xl font-headline font-black text-background uppercase tracking-tight italic mb-4">
-        "{{ note.content.slice(0, 100) }}"
+        "{{ plainTextContent.slice(0, 100) }}"
       </p>
       <span class="text-background/60 font-black text-xs">- {{ note.title }}</span>
     </template>
@@ -144,11 +149,11 @@ const cardTypeStyles = computed(() => {
       <ul class="text-white/90 text-sm space-y-2 font-bold italic">
         <li class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary-container">check_box</span>
-          {{ note.content.split('\n')[0] }}
+          {{ plainTextContent.split('\n')[0] }}
         </li>
-        <li v-if="note.content.split('\n')[1]" class="flex items-center gap-2">
+        <li v-if="plainTextContent.split('\n')[1]" class="flex items-center gap-2">
           <span class="material-symbols-outlined text-white">check_box_outline_blank</span>
-          {{ note.content.split('\n')[1] }}
+          {{ plainTextContent.split('\n')[1] }}
         </li>
       </ul>
     </template>
@@ -189,10 +194,9 @@ const cardTypeStyles = computed(() => {
       <!-- Content preview -->
       <p
         v-if="!compact"
-        class="font-body text-sm leading-relaxed opacity-80 mb-6"
-      >
-        {{ truncatedContent }}
-      </p>
+        class="font-body text-sm leading-relaxed opacity-80 mb-6 note-content"
+        v-html="truncatedContent"
+      />
 
       <!-- Footer -->
       <div class="flex items-center justify-between">
@@ -243,5 +247,29 @@ const cardTypeStyles = computed(() => {
 }
 .font-body {
   font-family: 'Manrope', sans-serif;
+}
+
+/* Rich text content styles in cards */
+.note-content :deep(strong),
+.note-content :deep(b) {
+  color: #ffd700;
+}
+
+.note-content :deep(em),
+.note-content :deep(i) {
+  font-style: italic;
+}
+
+.note-content :deep(u) {
+  text-decoration: underline;
+}
+
+.note-content :deep(s) {
+  text-decoration: line-through;
+  color: #666666;
+}
+
+.note-content :deep(a) {
+  color: #ffd700;
 }
 </style>

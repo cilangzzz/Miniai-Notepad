@@ -1,29 +1,25 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useNotes } from '@/composables/useNotes'
-import { useCategories } from '@/composables/useCategories'
 import { useTags } from '@/composables/useTags'
-import { useEditorHistory } from '@/composables/useEditorHistory'
-import { useTextFormat } from '@/composables/useTextFormat'
 import { useResponsive } from '@/composables/useResponsive'
 import { useToast } from '@/composables/useToast'
 import EditorToolbar from '@/components/business/note/EditorToolbar.vue'
 import TitleEditor from '@/components/business/note/TitleEditor.vue'
-import ContentEditor from '@/components/business/note/ContentEditor.vue'
+import RichTextEditor from '@/components/business/note/RichTextEditor.vue'
+import RichTextToolbar from '@/components/business/note/RichTextToolbar.vue'
 import TaxonomyPanel from '@/components/business/note/TaxonomyPanel.vue'
 import ReminderPanel from '@/components/business/note/ReminderPanel.vue'
 import CardChromatic from '@/components/business/note/CardChromatic.vue'
 import SaveFAB from '@/components/business/note/SaveFAB.vue'
-import MobileToolbar from '@/components/business/note/MobileToolbar.vue'
-import type { Note, CardColor } from '@/types/entities'
+import type { CardColor } from '@/types/entities'
 
 const router = useRouter()
 const route = useRoute()
 const { isMobile } = useResponsive()
 const toast = useToast()
-const { notes, createNote, updateNote, fetchNoteById } = useNotes()
-const { categories } = useCategories()
+const { createNote, updateNote, fetchNoteById } = useNotes()
 const { tags } = useTags()
 
 // Note draft data
@@ -43,9 +39,10 @@ const noteDraft = ref({
 const isSaving = ref(false)
 const isNewNote = computed(() => !route.params.id || route.params.id === 'new')
 const lastEditedTime = ref('Just now')
+const richTextEditorRef = ref<InstanceType<typeof RichTextEditor> | null>(null)
 
-// Editor history
-const { history, canUndo, canRedo, pushState, undo, redo, reset } = useEditorHistory(noteDraft.value)
+// Editor instance for toolbar
+const editorInstance = computed(() => richTextEditorRef.value?.editor ?? null)
 
 // Validation
 const isValid = computed(() =>
@@ -65,22 +62,13 @@ onMounted(async () => {
         tags: note.tags,
         card_type: note.card_type,
         card_color: note.card_color,
-        font_weight: 700,
+        font_weight: 'bold' as 'normal' | 'medium' | 'bold' | 'extrabold',
         is_pinned: note.is_pinned,
         reminder_at: note.reminder_at,
       }
-      reset(noteDraft.value)
     }
   }
 })
-
-// Auto-save to history
-watch(noteDraft, (newDraft) => {
-  pushState(newDraft)
-}, { deep: true })
-
-// Text format
-const { insertBold, insertItalic, insertList, insertImage, insertLink } = useTextFormat(computed(() => noteDraft.value.content))
 
 // Handlers
 function handleClose() {
@@ -111,16 +99,6 @@ async function handleSave() {
   }
 }
 
-function handleUndo() {
-  undo()
-  noteDraft.value = history.value.present
-}
-
-function handleRedo() {
-  redo()
-  noteDraft.value = history.value.present
-}
-
 function handleAddTag(tagName: string) {
   if (!noteDraft.value.tags.includes(tagName)) {
     noteDraft.value.tags.push(tagName)
@@ -143,46 +121,24 @@ function handleSetReminder() {
   // Show date picker modal
 }
 
-// Apply text formatting
-function applyBold() {
-  insertBold()
+function handleCloseToolbar() {
+  router.push('/notes')
 }
 
-function applyItalic() {
-  insertItalic()
-}
-
-function applyList() {
-  insertList()
-}
-
-function applyImage() {
-  insertImage()
-}
-
-function applyLink() {
-  insertLink()
-}
-
-// Available tags
-const availableTags = computed(() => tags.value.map(t => ({
-  id: t.id,
-  name: t.name,
-  color: t.color,
-  rotation: t.rotation,
-})))
+// Available tags - simplified for display
+const availableTags = computed(() => tags.value)
 </script>
 
 <template>
   <div class="edit-note-page min-h-screen bg-background text-on-background font-body selection:bg-primary-container selection:text-black">
     <!-- Editor Toolbar -->
     <EditorToolbar
-      :can-undo="canUndo"
-      :can-redo="canRedo"
+      :can-undo="editorInstance?.can().undo() ?? false"
+      :can-redo="editorInstance?.can().redo() ?? false"
       :is-saving="isSaving"
       @close="handleClose"
-      @undo="handleUndo"
-      @redo="handleRedo"
+      @undo="editorInstance?.chain().focus().undo().run()"
+      @redo="editorInstance?.chain().focus().redo().run()"
       @save="handleSave"
     />
 
@@ -196,7 +152,8 @@ const availableTags = computed(() => tags.value.map(t => ({
             :max-length="50"
             placeholder="THE UNTITLED MANIFESTO..."
           />
-          <ContentEditor
+          <RichTextEditor
+            ref="richTextEditorRef"
             v-model="noteDraft.content"
             :max-length="5000"
             :min-height="400"
@@ -236,13 +193,10 @@ const availableTags = computed(() => tags.value.map(t => ({
     />
 
     <!-- Mobile Toolbar -->
-    <MobileToolbar
+    <RichTextToolbar
       v-if="isMobile"
-      @bold="applyBold"
-      @italic="applyItalic"
-      @list="applyList"
-      @image="applyImage"
-      @link="applyLink"
+      :editor="editorInstance"
+      @close="handleCloseToolbar"
     />
   </div>
 </template>
