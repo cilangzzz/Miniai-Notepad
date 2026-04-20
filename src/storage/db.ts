@@ -1,4 +1,5 @@
 import { MiniAIDB, STORE_NAMES } from './schemas/db.schema'
+import { seedFakeData } from './seed'
 
 /**
  * 数据库实例
@@ -25,6 +26,8 @@ export async function initDB(): Promise<void> {
   try {
     const db = getDB()
     await db.open()
+    // Seed fake data after database is ready
+    await seedFakeData()
   } catch (err) {
     // Version mismatch or schema change - delete old database and recreate
     console.warn('Database schema mismatch, recreating database...')

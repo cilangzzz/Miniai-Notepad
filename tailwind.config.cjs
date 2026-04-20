@@ -5,18 +5,23 @@ module.exports = {
     './public/index.html',
   ],
   safelist: [
-    // Ensure these arbitrary value classes are generated
-    'pt-[88px]',
-    'md:ml-[288px]',
-    'pb-[100px]',
-    'bottom-[88px]',
-    'h-[80px]',
-    'h-[72px]',
-    'h-[calc(100vh-80px)]',
-    'top-[80px]',
-    'top-[96px]',
-    'w-[288px]',
-    'min-w-[56px]',
+    // Layout classes with arbitrary values
+    'pt-[88px]', 'md:ml-[288px]', 'pb-[100px]', 'md:pb-0',
+    'h-[80px]', 'h-[72px]', 'h-[calc(100vh-80px)]',
+    'top-[80px]', 'w-72', 'w-[288px]', 'min-w-[56px]',
+    // Responsive visibility
+    'md:hidden', 'md:block',
+    // Colors
+    'bg-background', 'bg-primary-container', 'bg-secondary-container',
+    'bg-surface-container-high', 'bg-surface-container-lowest',
+    'text-on-primary', 'text-on-background', 'text-white', 'text-white/80', 'text-white/60', 'text-white/50',
+    'text-primary-container', 'text-secondary-container',
+    'border-white', 'border-r-4', 'border-t-4', 'border-2', 'border-4',
+    // Shadows
+    'shadow-sidebar', 'shadow-neo-small', 'shadow-neo-white',
+    // Fixed positioning
+    'fixed', 'left-0', 'right-0', 'bottom-0', 'top-0', 'inset-0',
+    'z-30', 'z-40', 'z-50',
   ],
   theme: {
     extend: {

@@ -10,6 +10,41 @@ function generateUUID(): string {
 }
 
 /**
+ * 深度克隆对象，去除 Proxy 和不可序列化的属性
+ * 使对象可以被 IndexedDB 存储
+ */
+function toPlainObject<T>(obj: T): T {
+  if (obj === null || obj === undefined) {
+    return obj
+  }
+
+  if (typeof obj !== 'object') {
+    return obj
+  }
+
+  // 处理数组
+  if (Array.isArray(obj)) {
+    return obj.map(item => toPlainObject(item)) as T
+  }
+
+  // 处理 Date 对象
+  if (obj instanceof Date) {
+    return new Date(obj.getTime()) as T
+  }
+
+  // 处理普通对象 - 去除 Proxy
+  const plain: Record<string, unknown> = {}
+  for (const key of Object.keys(obj)) {
+    const value = (obj as Record<string, unknown>)[key]
+    // 跳过函数和 undefined
+    if (typeof value !== 'function') {
+      plain[key] = toPlainObject(value)
+    }
+  }
+  return plain as T
+}
+
+/**
  * Repository基类实现
  * 提供通用的CRUD操作和同步预留方法
  */
@@ -33,7 +68,7 @@ export abstract class BaseRepository<T extends SyncableEntity, CreateDTO, Update
 
   async create(data: CreateDTO): Promise<T> {
     const now = Date.now()
-    const newEntity = {
+    const newEntity = toPlainObject({
       ...data,
       id: generateUUID(),
       created_at: now,
@@ -41,7 +76,7 @@ export abstract class BaseRepository<T extends SyncableEntity, CreateDTO, Update
       local_version: 1,
       sync_status: 'local' as SyncStatus,
       is_deleted: false,
-    } as T
+    }) as unknown as T
 
     await this.table.add(newEntity)
     return newEntity
@@ -54,13 +89,13 @@ export abstract class BaseRepository<T extends SyncableEntity, CreateDTO, Update
     }
 
     const now = Date.now()
-    const updated = {
+    const updated = toPlainObject({
       ...existing,
       ...data,
       updated_at: now,
       local_version: existing.local_version + 1,
       sync_status: existing.sync_status === 'synced' ? 'pending' : existing.sync_status,
-    } as T
+    }) as T
 
     await this.table.put(updated)
     return updated
@@ -85,7 +120,7 @@ export abstract class BaseRepository<T extends SyncableEntity, CreateDTO, Update
 
   async bulkCreate(entities: CreateDTO[]): Promise<T[]> {
     const now = Date.now()
-    const newEntities = entities.map(data => ({
+    const newEntities = entities.map(data => toPlainObject({
       ...data,
       id: generateUUID(),
       created_at: now,
@@ -93,7 +128,7 @@ export abstract class BaseRepository<T extends SyncableEntity, CreateDTO, Update
       local_version: 1,
       sync_status: 'local' as SyncStatus,
       is_deleted: false,
-    } as T))
+    }) as unknown as T)
 
     await this.table.bulkAdd(newEntities)
     return newEntities
@@ -106,13 +141,13 @@ export abstract class BaseRepository<T extends SyncableEntity, CreateDTO, Update
     for (const id of ids) {
       const existing = await this.findById(id)
       if (existing) {
-        const updated = {
+        const updated = toPlainObject({
           ...existing,
           ...data,
           updated_at: now,
           local_version: existing.local_version + 1,
           sync_status: existing.sync_status === 'synced' ? 'pending' : existing.sync_status,
-        } as T
+        }) as T
         await this.table.put(updated)
         results.push(updated)
       }
@@ -224,22 +259,22 @@ export abstract class BaseRepository<T extends SyncableEntity, CreateDTO, Update
 
     switch (resolution) {
       case 'keep_local':
-        resolved = {
+        resolved = toPlainObject({
           ...entity,
           sync_status: 'pending',
           updated_at: Date.now(),
-        } as T
+        }) as T
         break
       case 'keep_cloud':
         // 实际实现需要传入云端数据
-        resolved = entity
+        resolved = toPlainObject(entity) as T
         break
       case 'merge':
         // 实际实现需要合并策略
-        resolved = entity
+        resolved = toPlainObject(entity) as T
         break
       default:
-        resolved = entity
+        resolved = toPlainObject(entity) as T
     }
 
     await this.table.put(resolved)

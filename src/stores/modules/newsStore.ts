@@ -144,10 +144,6 @@ export const useNewsStore = defineStore('news', () => {
 
   function setCategory(category: string | null) {
     selectedCategory.value = category
-    page.value = 1
-    articles.value = []
-    hasMore.value = true
-    fetchNews(1)
   }
 
   function setCurrentArticle(article: NewsArticle) {

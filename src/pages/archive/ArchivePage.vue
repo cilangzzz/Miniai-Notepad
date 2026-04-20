@@ -22,11 +22,43 @@ const toastMessage = ref('')
 const filteredNotes = computed(() => {
   let result = archivedNotes.value
 
+  // Filter by search
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
     result = result.filter(n =>
       n.title.toLowerCase().includes(query) ||
       n.content.toLowerCase().includes(query)
+    )
+  }
+
+  // Filter by time
+  if (activeTimeFilter.value !== 'all') {
+    const now = Date.now()
+    let threshold: number
+    switch (activeTimeFilter.value) {
+      case '30d':
+        threshold = now - 30 * 24 * 60 * 60 * 1000
+        break
+      case '7d':
+        threshold = now - 7 * 24 * 60 * 60 * 1000
+        break
+      case '1d':
+        threshold = now - 1 * 24 * 60 * 60 * 1000
+        break
+      default:
+        threshold = 0
+    }
+    result = result.filter(n => (n.archived_at || 0) >= threshold)
+  }
+
+  // Filter by category
+  if (activeCategoryFilters.value.length > 0) {
+    result = result.filter(n =>
+      activeCategoryFilters.value.some(filterId => {
+        // Match category by category_id prefix (e.g., 'cat-work' matches 'work')
+        const categorySlug = n.category_id?.replace('cat-', '') || ''
+        return categorySlug === filterId || n.category_id === filterId
+      })
     )
   }
 
@@ -36,24 +68,20 @@ const filteredNotes = computed(() => {
 // Handlers
 function handleSearchExecute(query: string) {
   searchQuery.value = query
-  searchArchivedNotes(query)
 }
 
 function handleTimeChange(filterId: string) {
   activeTimeFilter.value = filterId
-  loadArchivedNotes()
 }
 
 function handleCategoryChange(filterIds: string[]) {
   activeCategoryFilters.value = filterIds
-  loadArchivedNotes()
 }
 
 function handleReset() {
   searchQuery.value = ''
   activeTimeFilter.value = 'all'
   activeCategoryFilters.value = []
-  loadArchivedNotes()
 }
 
 async function handleRestore(noteId: string) {

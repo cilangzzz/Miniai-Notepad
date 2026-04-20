@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useNews } from '@/composables/useNews'
 import { useResponsive } from '@/composables/useResponsive'
@@ -11,7 +11,7 @@ import type { NewsArticle } from '@/types/entities'
 
 const router = useRouter()
 const { isMobile } = useResponsive()
-const { articles, loading, hasMore, selectedCategory, fetchNews, refreshNews, setCategory, toggleFavorite } = useNews()
+const { articles, filteredArticles, loading, hasMore, selectedCategory, fetchNews, refreshNews, setCategory, toggleFavorite } = useNews()
 
 // State
 const showDetail = ref(false)
@@ -25,6 +25,9 @@ const categories = [
   { value: 'life', label: 'LIFE' },
   { value: 'world', label: 'WORLD' },
 ]
+
+// Computed display category
+const displayCategory = computed(() => selectedCategory.value || 'all')
 
 // Handlers
 function handleArticleClick(article: NewsArticle) {
@@ -41,7 +44,11 @@ function handleLoadMore() {
 }
 
 function handleCategoryChange(category: string) {
-  setCategory(category as 'all' | 'tech' | 'finance' | 'life' | 'world')
+  if (category === 'all') {
+    setCategory(null)
+  } else {
+    setCategory(category as 'tech' | 'finance' | 'life' | 'world')
+  }
 }
 
 function handleBack() {
@@ -89,14 +96,14 @@ onMounted(() => {
         v-for="cat in categories"
         :key="cat.value"
         :label="cat.label"
-        :active="selectedCategory === cat.value"
+        :active="displayCategory === cat.value"
         @click="handleCategoryChange(cat.value)"
       />
     </section>
 
     <!-- News List -->
     <NewsList
-      :articles="articles"
+      :articles="filteredArticles"
       :loading="loading"
       :has-more="hasMore"
       @article-click="handleArticleClick"

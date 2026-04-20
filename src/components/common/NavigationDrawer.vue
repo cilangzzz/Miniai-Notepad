@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject } from 'vue'
+import { computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 
 interface Category {
@@ -31,8 +31,8 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  select: [categoryId: string]
-  navigate: [route: string]
+  'select': [categoryId: string]
+  'navigate': [route: string]
 }>()
 
 const router = useRouter()
@@ -47,12 +47,10 @@ const navItems = computed(() => [
   { id: 'news', label: 'News', icon: 'newspaper', route: '/news' },
 ])
 
-// Check if nav item is active
 function isNavActive(itemId: string): boolean {
   return props.activeId === itemId
 }
 
-// Check if category is active
 function isCategoryActive(catId: string): boolean {
   return route.query.category === catId
 }
@@ -76,18 +74,15 @@ function handleSettingsClick() {
 <template>
   <aside
     v-if="visible"
-    :class="[
-      'fixed left-0 top-[80px] h-[calc(100vh-80px)] w-72',
-      'flex flex-col p-6',
-      'bg-background border-r-4 border-white',
-      'shadow-sidebar z-50 overflow-y-auto',
-      // Desktop: always visible, Mobile: controlled by parent
-      mobile ? '' : 'hidden md:flex',
-    ]"
+    class="fixed left-0 top-[88px] h-[calc(100vh-88px)] w-[320px]
+           flex flex-col py-8 px-6
+           bg-background border-r-4 border-white
+           overflow-y-auto"
+    :class="mobile ? 'z-50 bg-surface-container' : 'z-30'"
   >
     <!-- Main Navigation -->
-    <nav class="flex flex-col gap-1">
-      <span class="text-white/50 font-headline font-bold text-[10px] tracking-widest mb-3 uppercase">
+    <nav class="flex flex-col gap-3 mb-8">
+      <span class="text-white/50 font-headline font-bold text-sm tracking-widest mb-3 px-2 uppercase">
         NAVIGATION
       </span>
 
@@ -95,26 +90,25 @@ function handleSettingsClick() {
         v-for="item in navItems"
         :key="item.id"
         type="button"
+        class="font-headline font-bold flex items-center gap-4 py-4 px-4 transition-all w-full text-left"
         :class="[
-          'font-headline font-bold flex items-center gap-3 py-2 px-3 transition-all',
-          'hover:translate-x-1 hover:text-primary-container',
           isNavActive(item.id)
-            ? 'bg-secondary-container text-white font-black border-2 border-white'
-            : 'text-white/80',
+            ? 'bg-secondary-container text-white font-black border-4 border-white shadow-neo-white'
+            : 'text-white/80 hover:bg-surface-container-high hover:text-primary-container border-2 border-transparent',
         ]"
         @click="handleNavClick(item.route)"
       >
-        <span class="material-symbols-outlined">{{ item.icon }}</span>
-        <span class="uppercase text-sm">{{ item.label }}</span>
+        <span class="material-symbols-outlined text-2xl">{{ item.icon }}</span>
+        <span class="uppercase text-base font-bold">{{ item.label }}</span>
       </button>
     </nav>
 
     <!-- Divider -->
-    <div class="border-t-2 border-white/20 my-4" />
+    <div class="border-t-4 border-white/30 mb-8" />
 
-    <!-- Category navigation -->
-    <nav class="flex flex-col gap-1">
-      <span class="text-white/50 font-headline font-bold text-[10px] tracking-widest mb-3 uppercase">
+    <!-- Categories -->
+    <nav class="flex flex-col gap-3 mb-8">
+      <span class="text-white/50 font-headline font-bold text-sm tracking-widest mb-3 px-2 uppercase">
         CATEGORIES
       </span>
 
@@ -122,45 +116,49 @@ function handleSettingsClick() {
         v-for="cat in categories"
         :key="cat.id"
         type="button"
+        class="font-headline font-bold flex items-center gap-4 py-4 px-4 transition-all w-full text-left"
         :class="[
-          'font-headline font-bold flex items-center gap-3 py-2 px-3 transition-all',
-          'hover:translate-x-1 hover:text-primary-container text-white/80',
-          isCategoryActive(cat.id) && 'text-primary-container font-black',
+          isCategoryActive(cat.id)
+            ? 'bg-surface-container-high text-primary-container font-black border-4 border-primary-container shadow-neo-gold'
+            : 'text-white/80 hover:bg-surface-container-high hover:text-primary-container border-2 border-transparent',
         ]"
         @click="handleCategorySelect(cat.id)"
       >
-        <span class="material-symbols-outlined text-primary-container">{{ cat.icon }}</span>
-        <span class="uppercase text-sm">{{ cat.name }}</span>
+        <span class="material-symbols-outlined text-2xl text-primary-container">{{ cat.icon }}</span>
+        <span class="uppercase text-base font-bold">{{ cat.name }}</span>
       </button>
     </nav>
 
-    <!-- Storage indicator -->
-    <div class="mt-auto pt-6">
-      <div class="p-4 bg-surface-container-high border-2 border-white shadow-neo-white mb-4">
-        <p class="font-headline font-bold text-xs uppercase mb-2 text-white/60">Storage</p>
-        <div class="h-4 w-full bg-surface-container-lowest border-2 border-white">
+    <!-- Spacer to push bottom content down -->
+    <div class="flex-grow" />
+
+    <!-- Bottom: Storage + Settings -->
+    <div class="mt-auto">
+      <!-- Storage -->
+      <div class="p-6 bg-surface-container-high border-4 border-white mb-6 shadow-neo-white">
+        <p class="font-headline font-bold text-sm uppercase mb-4 text-white/60">Storage</p>
+        <div class="h-6 w-full bg-surface-container-lowest border-4 border-white">
           <div
-            class="h-full bg-primary-container transition-all duration-300"
+            class="h-full bg-primary-container"
             :style="{ width: `${storageUsed}%` }"
           />
         </div>
-        <p class="font-headline text-xs text-white/60 mt-2">{{ storageUsed }}% of 50MB</p>
+        <p class="font-headline text-sm text-white/60 mt-3">{{ storageUsed }}% / 50MB</p>
       </div>
 
-      <!-- Settings link -->
+      <!-- Settings -->
       <button
         type="button"
+        class="w-full font-headline font-bold flex items-center gap-4 py-4 px-4 transition-all text-left"
         :class="[
-          'w-full font-headline font-bold flex items-center gap-3 py-2 px-3 transition-all',
-          'hover:translate-x-1 hover:text-primary-container',
           props.activeId === 'settings'
-            ? 'bg-surface-container-high text-white font-black border-2 border-white'
-            : 'text-white/60',
+            ? 'bg-secondary-container text-white font-black border-4 border-white shadow-neo-white'
+            : 'text-white/60 hover:bg-surface-container-high hover:text-primary-container border-2 border-transparent',
         ]"
         @click="handleSettingsClick"
       >
-        <span class="material-symbols-outlined">settings</span>
-        <span class="uppercase text-sm">Settings</span>
+        <span class="material-symbols-outlined text-2xl">settings</span>
+        <span class="uppercase text-base font-bold">Settings</span>
       </button>
     </div>
   </aside>
@@ -169,5 +167,18 @@ function handleSettingsClick() {
 <style scoped>
 .font-headline {
   font-family: 'Space Grotesk', sans-serif;
+}
+
+/* Custom scrollbar for sidebar */
+aside::-webkit-scrollbar {
+  width: 6px;
+}
+
+aside::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+aside::-webkit-scrollbar-thumb {
+  background: #FFD700;
 }
 </style>

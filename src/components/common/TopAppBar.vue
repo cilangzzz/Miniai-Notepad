@@ -14,23 +14,23 @@ const props = withDefaults(defineProps<Props>(), {
 })
 
 const emit = defineEmits<{
-  menuClick: []
-  searchClick: []
-  avatarClick: []
+  'menu-click': []
+  'search-click': []
+  'avatar-click': []
 }>()
 </script>
 
 <template>
   <header
-    class="bg-background border-b-4 border-white flex justify-between items-center w-full h-[80px] px-6 py-4 fixed top-0 left-0 right-0 z-50"
+    class="bg-background border-b-4 border-white flex justify-between items-center w-full h-[88px] px-6 fixed top-0 left-0 right-0 z-50"
   >
     <!-- Left: Menu + Logo -->
     <div class="flex items-center gap-4">
       <button
         v-if="showMenu"
         type="button"
-        class="text-white hover:skew-x-1 transition-transform duration-150"
-        @click="emit('menuClick')"
+        class="text-white hover:skew-x-1 transition-transform duration-150 p-2"
+        @click="emit('menu-click')"
       >
         <span class="material-symbols-outlined text-3xl">menu</span>
       </button>
@@ -47,8 +47,8 @@ const emit = defineEmits<{
       <button
         v-if="showSearch"
         type="button"
-        class="text-white hover:skew-x-1 transition-transform duration-150"
-        @click="emit('searchClick')"
+        class="text-white hover:skew-x-1 transition-transform duration-150 p-2"
+        @click="emit('search-click')"
       >
         <span class="material-symbols-outlined text-3xl">search</span>
       </button>
@@ -57,7 +57,7 @@ const emit = defineEmits<{
         v-if="showAvatar"
         type="button"
         class="w-10 h-10 bg-secondary-container border-2 border-white flex items-center justify-center overflow-hidden"
-        @click="emit('avatarClick')"
+        @click="emit('avatar-click')"
       >
         <span class="material-symbols-outlined text-white">person</span>
       </button>

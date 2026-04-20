@@ -15,7 +15,14 @@
       "Bash(npx tsx *)",
       "Bash(git add *)",
       "Bash(git commit -m ' *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(npx tsc *)",
+      "Bash(npx vue-tsc *)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(pkill -f vite)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(curl -s http://localhost:3004)",
+      "Bash(curl -s http://localhost:3005)"
     ]
   }
 }

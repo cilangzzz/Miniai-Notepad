@@ -23,9 +23,9 @@ export class NoteRepository extends BaseRepository<Note, NoteCreateDTO, NoteUpda
     // Convert to plain object for IndexedDB compatibility
     const newNote: Note = {
       id: crypto.randomUUID(),
-      title: String(data.title),
-      content: String(data.content),
-      category_id: String(data.category_id),
+      title: String(data.title ?? ''),
+      content: String(data.content ?? ''),
+      category_id: String(data.category_id ?? 'cat-tasks'),
       tags: Array.isArray(data.tags) ? [...data.tags] : [],
       card_type: data.card_type || 'text',
       card_color: data.card_color || 'yellow',
